@@ -70,7 +70,7 @@ class IMailFromFieldAction(Interface):
         )
 
 
-class MailGroupAction(SimpleItem):
+class MailFromFieldAction(SimpleItem):
     """
     The implementation of the action defined before
     """
@@ -131,17 +131,18 @@ class MailActionExecutor(object):
             from_name = portal.getProperty('email_from_name')
             source = "%s <%s>" % (from_name, from_address)
 
-        event_title = safe_unicode(obj.Title())
+        obj_title = safe_unicode(obj.Title())
+        section_title = safe_unicode(context.Title())
         event_url = obj.absolute_url()
         message = self.element.message.replace("${url}", event_url)
-        message = message.replace("${title}", event_title)
-        message = message.replace("${namedirectory}", context.Title())
-        message = message.replace("${section_url}", self.context.absolute_url())
+        message = message.replace("${title}", obj_title)
+        message = message.replace("${section_name}", section_title)
+        message = message.replace("${section_url}", context.absolute_url())
 
         subject = self.element.subject.replace("${url}", event_url)
-        subject = subject.replace("${title}", event_title)
-        subject = subject.replace("${section_name}", self.context.Title())
-        subject = subject.replace("${section_url}", self.context.absolute_url())
+        subject = subject.replace("${title}", obj_title)
+        subject = subject.replace("${section_name}", section_title)
+        subject = subject.replace("${section_url}", context.absolute_url())
 
         obj = aq_base(aq_inner(obj))
 
@@ -192,7 +193,7 @@ class MailFromFieldAddForm(AddForm):
     form_name = _(u"Configure element")
 
     def create(self, data):
-        a = MailGroupAction()
+        a = MailFromFieldAction()
         form.applyChanges(a, self.form_fields, data)
         return a
 

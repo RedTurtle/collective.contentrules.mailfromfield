@@ -45,52 +45,13 @@ class TestMailAction(ContentRulesTestCase):
 
     def afterSetUp(self):
         self.setRoles(('Manager', ))
-        self.portal.invokeFactory('Folder', 'target')
-        self.folder.invokeFactory('Document', 'd1',
-            title=unicode('WÃ¤lkommen', 'utf-8'))
-
-        # set up default user and portal owner
-        member = self.portal.portal_membership.getMemberById(default_user)
-        member.setMemberProperties(dict(email="default@dummy.org"))
-        member = self.portal.portal_membership.getMemberById('portal_owner')
-        member.setMemberProperties(dict(email="portal@dummy.org"))
-
-        membership = getToolByName(self.portal, 'portal_membership')
-
-        membership.addMember(
-            'member1',
-            'secret',
-            ('Member', ),
-            (),
-            properties={'email': 'member1@dummy.org'})
-
-        membership.addMember(
-            'member2',
-            'secret',
-            ('Member', ),
-            (),
-            properties={'email': 'member2@dummy.org'})
-
-        # empty e-mail address
-        membership.addMember(
-            'member3',
-            'secret',
-            ('Member', ),
-            (),
-            properties={'email': ''})
-
-        groups = getToolByName(self.portal, 'portal_groups')
-
-        groups.addGroup('group1')
-        groups.addPrincipalToGroup('member1', 'group1')
-
-        groups.addGroup('group2')
-        groups.addPrincipalToGroup('member2', 'group2')
-        groups.addPrincipalToGroup('member3', 'group2')
+        self.portal.invokeFactory('Folder', 'target', title=unicode('Càrtella', 'utf-8'))
+        self.portal.target.invokeFactory('Document', 'd1', title=unicode('Dòcumento', 'utf-8'))
+        self.folder = self.portal.target 
 
     def testRegistered(self):
         element = getUtility(IRuleAction, name='plone.actions.MailFromField')
-        self.assertEquals('plone.actions.MailGroup', element.addview)
+        self.assertEquals('plone.actions.MailFromField', element.addview)
         self.assertEquals('edit', element.editview)
         self.assertEquals(None, element.for_)
         self.assertEquals(IObjectEvent, element.event)
@@ -104,39 +65,41 @@ class TestMailAction(ContentRulesTestCase):
         adding = getMultiAdapter((rule, self.portal.REQUEST), name='+action')
         addview = getMultiAdapter((adding, self.portal.REQUEST),
                                   name=element.addview)
-        self.failUnless(isinstance(addview, MailGroupAddForm))
+        self.failUnless(isinstance(addview, MailFromFieldAddForm))
 
         addview.createAndAdd(data={'subject': 'My Subject',
                                    'source': 'foo@bar.be',
-                                   'groups': ['group1', 'group2'],
-                                   'members': [default_user, ],
+                                   'fieldName': 'foo',
+                                   'target': 'object',
                                    'message': 'Hey, Oh!'})
 
         e = rule.actions[0]
-        self.failUnless(isinstance(e, MailGroupAction))
+        self.failUnless(isinstance(e, MailFromFieldAction))
         self.assertEquals('My Subject', e.subject)
         self.assertEquals('foo@bar.be', e.source)
-        self.assertEquals(['group1', 'group2'], e.groups)
-        self.assertEquals([default_user, ], e.members)
+        self.assertEquals('foo', e.fieldName)
+        self.assertEquals('object', e.target)
         self.assertEquals('Hey, Oh!', e.message)
 
     def testInvokeEditView(self):
-        element = getUtility(IRuleAction, name='plone.actions.MailGroup')
-        e = MailGroupAction()
+        element = getUtility(IRuleAction, name='plone.actions.MailFromField')
+        e = MailFromFieldAction()
         editview = getMultiAdapter((e, self.folder.REQUEST),
                                    name=element.editview)
-        self.failUnless(isinstance(editview, MailGroupEditForm))
+        self.failUnless(isinstance(editview, MailFromFieldEditForm))
 
-    def testExecute(self):
+    def testExecuteSimpleByAttribute(self):
         self.loginAsPortalOwner()
+        self.folder.foo_attr = 'member1@dummy.org'
         sm = getSiteManager(self.portal)
         sm.unregisterUtility(provided=IMailHost)
         dummyMailHost = DummySecureMailHost('dMailhost')
         sm.registerUtility(dummyMailHost, IMailHost)
-        e = MailGroupAction()
+        e = MailFromFieldAction()
         e.source = "foo@bar.be"
-        e.groups = ['group1', ]
-        e.message = u"PÃ¤ge '${title}' created in ${url} !"
+        e.fieldName = 'foo_attr'
+        e.target = 'object'
+        e.message = u"Còntènt '${title}' created in ${url} !"
         ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
                              IExecutable)
         ex()
@@ -146,8 +109,7 @@ class TestMailAction(ContentRulesTestCase):
                         mailSent.get('Content-Type'))
         self.assertEqual("member1@dummy.org", mailSent.get('To'))
         self.assertEqual("foo@bar.be", mailSent.get('From'))
-        self.assertEqual("P\xc3\xa4ge 'W\xc3\xa4lkommen' created in \
-http://nohost/plone/Members/test_user_1_/d1 !",
+        self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'C\xc3\xa0rtella' created in http://nohost/plone/target !",
                          mailSent.get_payload(decode=True))
 
     def testExecuteNoSource(self):
@@ -156,8 +118,7 @@ http://nohost/plone/Members/test_user_1_/d1 !",
         sm.unregisterUtility(provided=IMailHost)
         dummyMailHost = DummySecureMailHost('dMailhost')
         sm.registerUtility(dummyMailHost, IMailHost)
-        e = MailGroupAction()
-        e.groups = ['group1', ]
+        e = MailFromFieldAction()
         e.message = 'Document created !'
         ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
                              IExecutable)
@@ -175,46 +136,6 @@ http://nohost/plone/Members/test_user_1_/d1 !",
         self.assertEqual("Document created !",
                          mailSent.get_payload(decode=True))
 
-    def testExecuteMultiGroupsAndUsers(self):
-        self.loginAsPortalOwner()
-        sm = getSiteManager(self.portal)
-        sm.unregisterUtility(provided=IMailHost)
-        dummyMailHost = DummySecureMailHost('dMailhost')
-        sm.registerUtility(dummyMailHost, IMailHost)
-        e = MailGroupAction()
-        e.source = "foo@bar.be"
-        e.groups = ['group1', 'group2']
-        e.members = ['portal_owner', default_user, ]
-        e.message = 'Document created !'
-        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
-                             IExecutable)
-        ex()
-        self.assertEqual(len(dummyMailHost.sent), 4)
-        self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
-        mailSent = dummyMailHost.sent[0]
-        self.assertEqual('text/plain; charset="utf-8"',
-                        mailSent.get('Content-Type'))
-        self.assertEqual('default@dummy.org', mailSent.get('To'))
-        self.assertEqual('foo@bar.be', mailSent.get('From'))
-        self.assertEqual('Document created !', mailSent.get_payload(decode=True))
-        mailSent = dummyMailHost.sent[1]
-        self.assertEqual('text/plain; charset="utf-8"',
-                        mailSent.get('Content-Type'))
-        self.assertEqual('portal@dummy.org', mailSent.get('To'))
-        self.assertEqual('foo@bar.be', mailSent.get('From'))
-        self.assertEqual('Document created !', mailSent.get_payload(decode=True))
-        mailSent = dummyMailHost.sent[2]
-        self.assertEqual('text/plain; charset="utf-8"',
-                        mailSent.get('Content-Type'))
-        self.assertEqual('member1@dummy.org', mailSent.get('To'))
-        self.assertEqual('foo@bar.be', mailSent.get('From'))
-        self.assertEqual('Document created !', mailSent.get_payload(decode=True))
-        mailSent = dummyMailHost.sent[3]
-        self.assertEqual('text/plain; charset="utf-8"',
-                        mailSent.get('Content-Type'))
-        self.assertEqual('member2@dummy.org', mailSent.get('To'))
-        self.assertEqual('foo@bar.be', mailSent.get('From'))
-        self.assertEqual('Document created !', mailSent.get_payload(decode=True))
 
 
 def test_suite():
