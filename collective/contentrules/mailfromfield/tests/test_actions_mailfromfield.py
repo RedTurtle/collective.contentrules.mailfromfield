@@ -88,29 +88,6 @@ class TestMailAction(ContentRulesTestCase):
                                    name=element.editview)
         self.failUnless(isinstance(editview, MailFromFieldEditForm))
 
-    def testExecuteSimpleByAttribute(self):
-        self.loginAsPortalOwner()
-        self.folder.foo_attr = 'member1@dummy.org'
-        sm = getSiteManager(self.portal)
-        sm.unregisterUtility(provided=IMailHost)
-        dummyMailHost = DummySecureMailHost('dMailhost')
-        sm.registerUtility(dummyMailHost, IMailHost)
-        e = MailFromFieldAction()
-        e.source = "foo@bar.be"
-        e.fieldName = 'foo_attr'
-        e.target = 'object'
-        e.message = u"Còntènt '${title}' created in ${url} !"
-        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
-                             IExecutable)
-        ex()
-        self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
-        mailSent = dummyMailHost.sent[0]
-        self.assertEqual('text/plain; charset="utf-8"',
-                        mailSent.get('Content-Type'))
-        self.assertEqual("member1@dummy.org", mailSent.get('To'))
-        self.assertEqual("foo@bar.be", mailSent.get('From'))
-        self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'C\xc3\xa0rtella' created in http://nohost/plone/target !",
-                         mailSent.get_payload(decode=True))
 
     def testExecuteNoSource(self):
         self.loginAsPortalOwner()
@@ -120,6 +97,9 @@ class TestMailAction(ContentRulesTestCase):
         sm.registerUtility(dummyMailHost, IMailHost)
         e = MailFromFieldAction()
         e.message = 'Document created !'
+        e.fieldName = 'foo_attr'
+        e.target = 'object'
+        self.folder.foo_attr = 'member1@dummy.org'
         ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
                              IExecutable)
         self.assertRaises(ValueError, ex)
@@ -136,6 +116,135 @@ class TestMailAction(ContentRulesTestCase):
         self.assertEqual("Document created !",
                          mailSent.get_payload(decode=True))
 
+
+    def testExecuteSimpleByAttribute(self):
+        self.loginAsPortalOwner()
+        self.folder.foo_attr = 'member1@dummy.org'
+        sm = getSiteManager(self.portal)
+        sm.unregisterUtility(provided=IMailHost)
+        dummyMailHost = DummySecureMailHost('dMailhost')
+        sm.registerUtility(dummyMailHost, IMailHost)
+        e = MailFromFieldAction()
+        e.source = "foo@bar.be"
+        e.fieldName = 'foo_attr'
+        e.target = 'object'
+        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
+                             IExecutable)
+        ex()
+        self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
+        mailSent = dummyMailHost.sent[0]
+        self.assertEqual('text/plain; charset="utf-8"',
+                        mailSent.get('Content-Type'))
+        self.assertEqual("member1@dummy.org", mailSent.get('To'))
+        self.assertEqual("foo@bar.be", mailSent.get('From'))
+        self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'C\xc3\xa0rtella' created in http://nohost/plone/target - "
+                         "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
+                         mailSent.get_payload(decode=True))
+
+
+    def testExecuteTargetByAttribute(self):
+        self.loginAsPortalOwner()
+        self.folder.d1.foo_attr = 'member1@dummy.org'
+        sm = getSiteManager(self.portal)
+        sm.unregisterUtility(provided=IMailHost)
+        dummyMailHost = DummySecureMailHost('dMailhost')
+        sm.registerUtility(dummyMailHost, IMailHost)
+        e = MailFromFieldAction()
+        e.source = "foo@bar.be"
+        e.fieldName = 'foo_attr'
+        e.target = 'target'
+        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
+                             IExecutable)
+        ex()
+        self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
+        mailSent = dummyMailHost.sent[0]
+        self.assertEqual('text/plain; charset="utf-8"',
+                        mailSent.get('Content-Type'))
+        self.assertEqual("member1@dummy.org", mailSent.get('To'))
+        self.assertEqual("foo@bar.be", mailSent.get('From'))
+        self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'D\xc3\xb2cumento' created in http://nohost/plone/target/d1 - "
+                         "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
+                         mailSent.get_payload(decode=True))
+
+
+    def testExecuteSimpleByMethod(self):
+        self.loginAsPortalOwner()
+        self.folder.setDescription('member1@dummy.org')
+        sm = getSiteManager(self.portal)
+        sm.unregisterUtility(provided=IMailHost)
+        dummyMailHost = DummySecureMailHost('dMailhost')
+        sm.registerUtility(dummyMailHost, IMailHost)
+        e = MailFromFieldAction()
+        e.source = "foo@bar.be"
+        e.fieldName = 'Description'
+        e.target = 'object'
+        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
+                             IExecutable)
+        ex()
+        self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
+        mailSent = dummyMailHost.sent[0]
+        self.assertEqual('text/plain; charset="utf-8"',
+                        mailSent.get('Content-Type'))
+        self.assertEqual("member1@dummy.org", mailSent.get('To'))
+        self.assertEqual("foo@bar.be", mailSent.get('From'))
+        self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'C\xc3\xa0rtella' created in http://nohost/plone/target - "
+                         "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
+                         mailSent.get_payload(decode=True))
+
+
+    def testExecuteTargetByFieldName(self):
+        self.loginAsPortalOwner()
+        self.folder.d1.setText('member1@dummy.org')
+        sm = getSiteManager(self.portal)
+        sm.unregisterUtility(provided=IMailHost)
+        dummyMailHost = DummySecureMailHost('dMailhost')
+        sm.registerUtility(dummyMailHost, IMailHost)
+        e = MailFromFieldAction()
+        e.source = "foo@bar.be"
+        e.fieldName = 'text'
+        e.target = 'target'
+        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
+                             IExecutable)
+        ex()
+        self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
+        mailSent = dummyMailHost.sent[0]
+        self.assertEqual('text/plain; charset="utf-8"',
+                        mailSent.get('Content-Type'))
+        self.assertEqual("member1@dummy.org", mailSent.get('To'))
+        self.assertEqual("foo@bar.be", mailSent.get('From'))
+        self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'D\xc3\xb2cumento' created in http://nohost/plone/target/d1 - "
+                         "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
+                         mailSent.get_payload(decode=True))
+
+
+    def testExecuteSimpleByCMFProperty(self):
+        self.loginAsPortalOwner()
+        self.folder.manage_addProperty('foo_property', 'member1@dummy.org', 'string')
+        sm = getSiteManager(self.portal)
+        sm.unregisterUtility(provided=IMailHost)
+        dummyMailHost = DummySecureMailHost('dMailhost')
+        sm.registerUtility(dummyMailHost, IMailHost)
+        e = MailFromFieldAction()
+        e.source = "foo@bar.be"
+        e.fieldName = 'foo_property'
+        e.target = 'object'
+        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
+                             IExecutable)
+        ex()
+        self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
+        mailSent = dummyMailHost.sent[0]
+        self.assertEqual('text/plain; charset="utf-8"',
+                        mailSent.get('Content-Type'))
+        self.assertEqual("member1@dummy.org", mailSent.get('To'))
+        self.assertEqual("foo@bar.be", mailSent.get('From'))
+        self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'C\xc3\xa0rtella' created in http://nohost/plone/target - "
+                         "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
+                         mailSent.get_payload(decode=True))
 
 
 def test_suite():

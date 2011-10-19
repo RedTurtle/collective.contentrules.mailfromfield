@@ -122,8 +122,7 @@ class MailActionExecutor(object):
         portal = urltool.getPortalObject()
         email_charset = portal.getProperty('email_charset')
         if not source:
-            # no source provided, looking for the site wide from email
-            # address
+            # no source provided, looking for the site wide "from" email address
             from_address = portal.getProperty('email_from_address')
             if not from_address:
                 raise ValueError, ('You must provide a source address for this '
@@ -146,6 +145,8 @@ class MailActionExecutor(object):
 
         obj = aq_base(aq_inner(obj))
 
+        logger = logging.getLogger('collective.contentrules.mailfromfield')
+        
         # Try to load data from the target object
         fieldName = str(element.fieldName)
         # 1: object attribute
@@ -154,31 +155,36 @@ class MailActionExecutor(object):
             # 3: object method
             if hasattr(attr, '__call__'):
                 recipients = attr()
+                logger.info('getting e-mail from %s method' % fieldName)
             else:
                 recipients = attr
+                logger.info('getting e-mail from %s attribute' % fieldName)
         except AttributeError:
             # 2: try with AT field
-            if obj.getField('fieldName'):
+            if obj.getField(fieldName):
                 recipients = obj.getField(fieldName).get(obj)
             if not recipients:
                 recipients = obj.getProperty(fieldName, [])
+                if recipients:
+                    logger.info('getting e-mail from %s CMF property' % fieldName)
+            else:
+                logger.info('getting e-mail from %s AT field' % fieldName)
 
         # now tranform recipients in a iterator, if needed
         if type(recipients) == str or type(recipients) == unicode:
             recipients = [str(recipients),]
-
-        logger = logging.getLogger('collective.contentrules.mailfromfield')
 
         for email_recipient in recipients:
             logger.info('sending to: %s' % email_recipient)
 
             try: # sending mail in Plone 4
                 mailhost.send(message, mto=email_recipient, mfrom=source,
-                        subject=subject, charset=email_charset)
+                              subject=subject, charset=email_charset)
             except: #sending mail in Plone 3
                 mailhost.secureSend(message, email_recipient, source,
-                        subject=subject, subtype='plain',
-                        charset=email_charset, debug=False)
+                                    subject=subject, subtype='plain',
+                                    charset=email_charset, debug=False,
+                                    From=source)
 
         return True
 
