@@ -5,9 +5,9 @@ Introduction
 
 This product will add to Plone a new content rules, someway similar to the default "*Send an email*" ones.
 The difference is that the email recipient is taken dinamically from the content itself, not from a
-defined list of values.
+static list of values.
 
-In this way the same rule, applied in different places of the site, can warn different users.
+In this way the same rule, applied in different places in the site, can send the message to different users.
 
 How to use
 ==========
@@ -24,34 +24,36 @@ In the rule configuration panel you need to fill a set of information:
     You must put there the name of the attribute from which you want to retrieve the recipient
     e-mail. See next section.
 ``Target element``
-    You need to select there if the recipient's e-mail must be taken from the object where the
+    You need to select if the recipient's e-mail must be taken from the object where the
     rule is activated on ("*From trigger object*", default choice) or from the document that
     really raised the event ("*From event target*").
     
-    See next section.
+    See below for details.
 ``Mail message``
     The body text of the e-mail that will be sent. The text is the same for all section where
     the rule is activated on.
     
     You can place inside this text some markers (see below).
 
-How the address is taken (and from which object)
-------------------------------------------------
+How it take the email data
+--------------------------
 
 First of all you must choose the type of *target element*.
 
-If you choose to keep default "*From trigger object*", the data is read from the section you have
+If you choose to keep default "*From trigger object*" option, the data is read from the section you have
 activated the rule on.
-Example: if you activate the rule on a folder called ``section`` and a rule activated in this section
-will raise event when working on a document called ``foo`` (like: modifying the document), the e-mail
-address will be taken from the folder
 
-Changing to "*From event target*" will change the behaviour, trying to get e-mail data from
-the same attribute but looking for it on the object that raised the event.
-In the example above we will look for the value from the document.
+*Example*: if you activated the rule on a folder called ``section`` and the rule  will raise event when
+working on a document called ``foo`` (like: modifying the document), the e-mail address will be taken
+from the folder.
 
-What we'll try to read
-----------------------
+Changing to "*From event target*" will change the behavior, trying to get e-mail data from the same
+attribute but looking for it on the object that raised the event.
+
+In the example above: we will look for the value from the document.
+
+What it try to read
+-------------------
 
 The rule try to get from the object:
 
