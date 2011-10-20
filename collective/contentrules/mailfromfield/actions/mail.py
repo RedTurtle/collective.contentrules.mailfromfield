@@ -49,9 +49,7 @@ class IMailFromFieldAction(Interface):
         title=_(u"Target element"),
         description=_('help_target',
                       default=u"Choose to get the address info from the content where the rule is activated on "
-                              u"or from the target element of the event. This choice can lead to the same result, "
-                              u"but for some kind of rules types (like: adding a content in a container) can be "
-                              u"different."
+                              u"or from the target element of the event."
                       ),
         default='object',
         vocabulary='collective.contentrules.mailfromfield.vocabulary.targetElements',
@@ -131,9 +129,9 @@ class MailActionExecutor(object):
             from_name = portal.getProperty('email_from_name')
             source = "%s <%s>" % (from_name, from_address)
 
-        obj_title = safe_unicode(obj.Title())
+        obj_title = safe_unicode(event.object.Title())
         section_title = safe_unicode(context.Title())
-        event_url = obj.absolute_url()
+        event_url = event.object.absolute_url()
         message = self.element.message.replace("${url}", event_url)
         message = message.replace("${title}", obj_title)
         message = message.replace("${section_name}", section_title)

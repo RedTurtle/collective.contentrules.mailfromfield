@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: collective.contentrules.mailfromfield\n"
-"POT-Creation-Date: 2011-10-20 08:24+0000\n"
+"POT-Creation-Date: 2011-10-20 14:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: Luca Fabbri <keul@redturtle.it>\n"
 "Language-Team: RedTurtle Technology <sviluppoplone@redturtle.it>\n"
@@ -14,15 +14,15 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: collective.contentrules.mailfromfield\n"
 
-#: ../actions/mail.py:199
+#: ../actions/mail.py:197
 msgid "A mail action that take the e-mail address from the content where the rule is activated."
 msgstr "Una azione di invio e-mail che prende l'indirizzo dal contenuto sul quale la regola è attivata"
 
-#: ../actions/mail.py:198
+#: ../actions/mail.py:196
 msgid "Add mail from field action"
 msgstr "Aggiungi azione \"e-mail dal contenuto\""
 
-#: ../actions/mail.py:200
+#: ../actions/mail.py:198
 msgid "Configure element"
 msgstr "Configura elemento"
 
@@ -34,7 +34,7 @@ msgstr "Dall'obbiettivo dell'evento"
 msgid "From trigger object"
 msgstr "Dall'oggetto scatenante"
 
-#: ../actions/mail.py:61
+#: ../actions/mail.py:59
 msgid "Mail message"
 msgstr "Messaggio e-mail"
 
@@ -75,19 +75,19 @@ msgid "The email address that sends the email. If no email is provided here, it 
 msgstr "L'indirizzo e-mail del mittente. Se non viene specificato nessun indirizzo verranno usate le impostazioni del sito."
 
 #. Default: "Email to users defined in the \"${fieldName}\" data"
-#: ../actions/mail.py:89
+#: ../actions/mail.py:87
 msgid "action_summary"
 msgstr "E-mail agli utenti definiti dal dato \"${fieldName}\""
 
 #. Default: "Type in here the message that you want to mail. Some defined content can be replaced: ${title} will be replaced by the title of the target item. ${url} will be replaced by the URL of the item. ${section_url} will be replaced by the URL of the content the rule is applied to. ${section_name} will be replaced by the title of the content the rule is applied to."
-#: ../actions/mail.py:62
+#: ../actions/mail.py:60
 msgid "help_message"
 msgstr ""
 "Scrivi qui il messaggio che vuoi inviare.\n"
-"Alcuni contenuti predefinit possono essere rimpiazzati ${title} verrà rimpiazzato dal nome dell'obbiettivo dell'evento. ${url} verrà rimpiazzato dall'URL dell'obbiettivo dell'evento. ${section_url} verrà rimpiazzato dall'URL della sezione su cui la regola è applicata. "
+"Alcuni contenuti definiti possono essere rimpiazzati ${title} verrà rimpiazzato dal nome dell'obbiettivo dell'evento. ${url} verrà rimpiazzato dall'URL dell'obbiettivo dell'evento. ${section_url} verrà rimpiazzato dall'URL della sezione su cui la regola è applicata. "
 
-#. Default: "Choose to get the address info from the content where the rule is activated on or from the target element of the event. This choice can lead to the same result, but for some kind of rules types (like: adding a content in a container) can be different."
+#. Default: "Choose to get the address info from the content where the rule is activated on or from the target element of the event."
 #: ../actions/mail.py:50
 msgid "help_target"
-msgstr "Questa scelta può portare allo stesso risultato, ma con alcuni tipi di regole (ad esempio: agiungere contenuti in un contenitore) l'effetto può essere diverso."
+msgstr "Scegli se ottenere l'indirizzo dal contentuto dove la regola è attivata o se dall'elemento che ha scatenato la regola stessa."
 
