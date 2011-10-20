@@ -1,3 +1,5 @@
+.. contents::
+
 Introduction
 ============
 
@@ -13,25 +15,25 @@ How to use
 The rules can be enabled globally and locally like every one else, as default Plone feature.
 In the rule configuration panel you need to fill a set of information:
 
- ``Subject``
-     The e-mail subject. You can place inside this text some markers (see below).
- ``Sender email``
-     The sender of the e-mail. You can leave this empty and automatically use the one from the
-     site mail settings.
- ``Source field``
-     You must put there the name of the attribute from which you want to retrieve the recipient
-     e-mail. See next section.
- ``Target element``
-     You need to select there if the recipient's e-mail must be taken from the object where the
-     rule is activated on ("*From trigger object*", default choice) or from the document that
-     really raised the event ("*From event target*").
-     
-     See next section.
- ``Mail message``
-     The body text of the e-mail that will be sent. The text is the same for all section where
-     the rule is activated on.
-     
-     You can place inside this text some markers (see below).
+``Subject``
+    The e-mail subject. You can place inside this text some markers (see below).
+``Sender email``
+    The sender of the e-mail. You can leave this empty and automatically use the one from the
+    site mail settings.
+``Source field``
+    You must put there the name of the attribute from which you want to retrieve the recipient
+    e-mail. See next section.
+``Target element``
+    You need to select there if the recipient's e-mail must be taken from the object where the
+    rule is activated on ("*From trigger object*", default choice) or from the document that
+    really raised the event ("*From event target*").
+    
+    See next section.
+``Mail message``
+    The body text of the e-mail that will be sent. The text is the same for all section where
+    the rule is activated on.
+    
+    You can place inside this text some markers (see below).
 
 How the address is taken (and from which object)
 ------------------------------------------------
@@ -66,14 +68,14 @@ Message markers
 
 Marker labels that follow can be used in the message text and subject.
 
- ``${title}``
-     The title of the content that triggered the event (``foo`` title in our example)
- ``${url}``
-     The URL of the content that triggered the event (``foo`` URL in our example)
- ``${section_name}``
-     The title of the folder where the rule is activated on (``section`` title in our example)
- ``${section_url}``
-     The URL of the folder where the rule is activated on (``section`` URL in our example)
+``${title}``
+    The title of the content that triggered the event (``foo`` title in our example)
+``${url}``
+    The URL of the content that triggered the event (``foo`` URL in our example)
+``${section_name}``
+    The title of the folder where the rule is activated on (``section`` title in our example)
+``${section_url}``
+    The URL of the folder where the rule is activated on (``section`` URL in our example)
 
 TODO
 ====
