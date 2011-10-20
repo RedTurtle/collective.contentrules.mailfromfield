@@ -86,7 +86,8 @@ class MailFromFieldAction(SimpleItem):
 
     @property
     def summary(self):
-        return _(u'Email to users defined in the "${fieldName}" data',
+        return _('action_summary',
+                 default=u'Email to users defined in the "${fieldName}" data',
                  mapping=dict(fieldName=self.fieldName))
 
 
