@@ -122,6 +122,9 @@ Credits
 Developed with the support of `S. Anna Hospital, Ferrara`__; S. Anna Hospital supports the
 `PloneGov initiative`__.
 
+.. image:: http://www.ospfe.it/ospfe-logo.jpg
+   :alt: OspFE logo
+
 __ http://www.ospfe.it/
 __ http://www.plonegov.it/
 
