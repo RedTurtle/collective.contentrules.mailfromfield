@@ -79,6 +79,26 @@ Marker labels that follow can be used in the message text and subject.
 ``${section_url}``
     The URL of the folder where the rule is activated on (``section`` URL in our example)
 
+A real Plone use case
+---------------------
+
+A Plone site use `Signup Sheet`__ for manage internal training session. The form fieldset is
+customized as normal, but one of the field is ``director_email``.
+
+__ http://plone.org/products/signupsheet
+
+The scope there is that this e-mail address is notified when a user subscribe and the user
+itself put there the e-mail address of the proper director.
+
+To reach this we need to:
+
+* create a new rule triggered on "*Object added to this container*"
+* add a filter condition based on content type *Registrant*
+* add an action using the "*Send email to address taken from the content*"
+* specify in the action the SignupSheet field with the director email
+* specify in the action that we want to take the email from the target object
+  (the Registrant itself)
+
 TODO
 ====
 
@@ -86,6 +106,7 @@ TODO
 * why don't support also multiple valued sources?
 * right now the rules check all mail source until one is found with a defined order;
   maybe is better to leave this choice to the configuration
+* 
 
 Requirements
 ============
@@ -103,6 +124,10 @@ Developed with the support of `S. Anna Hospital, Ferrara`__; S. Anna Hospital su
 
 __ http://www.ospfe.it/
 __ http://www.plonegov.it/
+
+This product was largely developed looking at the source of `collective.contentrules.mailtogroup`__.
+
+__ http://plone.org/products/collective.contentrules.mailtogroup
 
 Authors
 =======
