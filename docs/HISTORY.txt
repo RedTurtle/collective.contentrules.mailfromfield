@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.2.0 (Unreleased)
+------------------
+
+* lowered logging level to debug [keul]
+
 0.1.0 (2011-10-21)
 ------------------
 

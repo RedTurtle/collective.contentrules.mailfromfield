@@ -154,10 +154,10 @@ class MailActionExecutor(object):
             # 3: object method
             if hasattr(attr, '__call__'):
                 recipients = attr()
-                logger.info('getting e-mail from %s method' % fieldName)
+                logger.debug('getting e-mail from %s method' % fieldName)
             else:
                 recipients = attr
-                logger.info('getting e-mail from %s attribute' % fieldName)
+                logger.debug('getting e-mail from %s attribute' % fieldName)
         except AttributeError:
             # 2: try with AT field
             if obj.getField(fieldName):
@@ -165,16 +165,16 @@ class MailActionExecutor(object):
             if not recipients:
                 recipients = obj.getProperty(fieldName, [])
                 if recipients:
-                    logger.info('getting e-mail from %s CMF property' % fieldName)
+                    logger.debug('getting e-mail from %s CMF property' % fieldName)
             else:
-                logger.info('getting e-mail from %s AT field' % fieldName)
+                logger.debug('getting e-mail from %s AT field' % fieldName)
 
         # now tranform recipients in a iterator, if needed
         if type(recipients) == str or type(recipients) == unicode:
             recipients = [str(recipients),]
 
         for email_recipient in recipients:
-            logger.info('sending to: %s' % email_recipient)
+            logger.debug('sending to: %s' % email_recipient)
 
             try: # sending mail in Plone 4
                 mailhost.send(message, mto=email_recipient, mfrom=source,
