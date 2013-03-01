@@ -5,6 +5,7 @@ Changelog
 ------------------
 
 * lowered logging level to debug [keul]
+* fixed ruleAction factory [cekk]
 
 0.1.0 (2011-10-21)
 ------------------
