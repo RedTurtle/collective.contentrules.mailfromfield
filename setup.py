@@ -3,6 +3,8 @@ import os
 
 version = '0.2.0.dev0'
 
+tests_require = ['Products.PloneTestCase', ]
+
 setup(name='collective.contentrules.mailfromfield',
       version=version,
       description="A Plone content rule for send e-mail to addresses taken from the content",
@@ -29,6 +31,8 @@ setup(name='collective.contentrules.mailfromfield',
       namespace_packages=['collective', 'collective.contentrules'],
       include_package_data=True,
       zip_safe=False,
+      tests_require=tests_require,
+      extras_require=dict(test=tests_require),
       install_requires=[
           'setuptools',
           'plone.contentrules',
