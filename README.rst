@@ -106,7 +106,7 @@ TODO
 * why don't support also multiple valued sources?
 * right now the rules check all mail source until one is found with a defined order;
   maybe is better to leave this choice to the configuration
-* 
+* Dexterity support (probably already there, but needs to be tested)
 
 Requirements
 ============
@@ -114,7 +114,8 @@ Requirements
 This product has been tested on:
 
 * Plone 3.3
-* Plone 4.1
+* Plone 4.2
+* Plone 4.3
 
 Credits
 =======
