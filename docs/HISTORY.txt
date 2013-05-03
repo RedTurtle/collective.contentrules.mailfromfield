@@ -4,14 +4,19 @@ Changelog
 0.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Do not fail if a rule is activated on
+  a non-AT content
+  [keul]
+- Do not try to send mail to empty string recipients
+  [keul]
 
 0.2.0 (2013-05-02)
 ------------------
 
-* lowered logging level to debug [keul]
-* fixed ruleAction factory [cekk]
+* lowered logging level to debug
+  [keul]
+* fixed ruleAction factory
+  [cekk]
 
 0.1.0 (2011-10-21)
 ------------------

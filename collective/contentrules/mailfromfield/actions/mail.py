@@ -18,6 +18,8 @@ from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 
+from Products.Archetypes.interfaces import IBaseContent
+
 from collective.contentrules.mailfromfield import messageFactory as _
 
 class IMailFromFieldAction(Interface):
@@ -160,7 +162,7 @@ class MailActionExecutor(object):
                 logger.debug('getting e-mail from %s attribute' % fieldName)
         except AttributeError:
             # 2: try with AT field
-            if obj.getField(fieldName):
+            if IBaseContent.providedBy(obj) and obj.getField(fieldName):
                 recipients = obj.getField(fieldName).get(obj)
             if not recipients:
                 recipients = obj.getProperty(fieldName, [])
@@ -173,7 +175,7 @@ class MailActionExecutor(object):
         if type(recipients) == str or type(recipients) == unicode:
             recipients = [str(recipients),]
 
-        for email_recipient in recipients:
+        for email_recipient in [r for r in recipients if r]:
             logger.debug('sending to: %s' % email_recipient)
 
             try: # sending mail in Plone 4

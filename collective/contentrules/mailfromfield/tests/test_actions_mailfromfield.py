@@ -275,6 +275,23 @@ class TestMailAction(ContentRulesTestCase):
                          "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
                          mailSent.get_payload(decode=True))
 
+    def testExecuteEmptyValue(self):
+        self.loginAsPortalOwner()
+        self.folder.foo_attr = ''
+        sm = getSiteManager(self.portal)
+        sm.unregisterUtility(provided=IMailHost)
+        dummyMailHost = DummySecureMailHost('dMailhost')
+        sm.registerUtility(dummyMailHost, IMailHost)
+        e = MailFromFieldAction()
+        e.source = "foo@bar.be"
+        e.fieldName = 'foo_attr'
+        e.target = 'object'
+        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)),
+                             IExecutable)
+        ex()
+        self.assertEqual(dummyMailHost.sent, [])
+
 
 def test_suite():
     from unittest import TestSuite, makeSuite
