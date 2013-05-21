@@ -12,13 +12,8 @@ from plone.contentrules.rule.interfaces import IRuleAction, IExecutable
 from collective.contentrules.mailfromfield.actions.mail import MailFromFieldAction
 from collective.contentrules.mailfromfield.actions.mail import MailFromFieldEditForm, MailFromFieldAddForm
 
-from Products.CMFCore.utils import getToolByName
-
 from Products.MailHost.interfaces import IMailHost
 from Products.SecureMailHost.SecureMailHost import SecureMailHost
-
-from Products.PloneTestCase.setup import default_user
-
 
 # basic test structure copied from plone.app.contentrules test_action_mail.py
 
@@ -47,7 +42,7 @@ class TestMailAction(ContentRulesTestCase):
         self.setRoles(('Manager', ))
         self.portal.invokeFactory('Folder', 'target', title=unicode('Càrtella', 'utf-8'))
         self.portal.target.invokeFactory('Document', 'd1', title=unicode('Dòcumento', 'utf-8'))
-        self.folder = self.portal.target 
+        self.folder = self.portal.target
 
     def testRegistered(self):
         element = getUtility(IRuleAction, name='plone.actions.MailFromField')
@@ -88,7 +83,6 @@ class TestMailAction(ContentRulesTestCase):
                                    name=element.editview)
         self.failUnless(isinstance(editview, MailFromFieldEditForm))
 
-
     def testExecuteNoSource(self):
         self.loginAsPortalOwner()
         sm = getSiteManager(self.portal)
@@ -118,7 +112,6 @@ class TestMailAction(ContentRulesTestCase):
         self.assertEqual("Document created !",
                          mailSent.get_payload(decode=True))
 
-
     def testExecuteSimpleByAttribute(self):
         self.loginAsPortalOwner()
         self.folder.foo_attr = 'member1@dummy.org'
@@ -143,7 +136,6 @@ class TestMailAction(ContentRulesTestCase):
         self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'D\xc3\xb2cumento' created in http://nohost/plone/target/d1 - "
                          "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
                          mailSent.get_payload(decode=True))
-
 
     def testExecuteTargetByAttribute(self):
         self.loginAsPortalOwner()
@@ -170,7 +162,6 @@ class TestMailAction(ContentRulesTestCase):
                          "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
                          mailSent.get_payload(decode=True))
 
-
     def testExecuteSimpleByMethod(self):
         self.loginAsPortalOwner()
         self.folder.setDescription('member1@dummy.org')
@@ -195,7 +186,6 @@ class TestMailAction(ContentRulesTestCase):
         self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'D\xc3\xb2cumento' created in http://nohost/plone/target/d1 - "
                          "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
                          mailSent.get_payload(decode=True))
-
 
     def testExecuteTargetByFieldName(self):
         self.loginAsPortalOwner()
@@ -222,7 +212,6 @@ class TestMailAction(ContentRulesTestCase):
                          "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
                          mailSent.get_payload(decode=True))
 
-
     def testExecuteSimpleByCMFProperty(self):
         self.loginAsPortalOwner()
         self.folder.manage_addProperty('foo_property', 'member1@dummy.org', 'string')
@@ -247,7 +236,6 @@ class TestMailAction(ContentRulesTestCase):
         self.assertEqual("C\xc3\xb2nt\xc3\xa8nt 'D\xc3\xb2cumento' created in http://nohost/plone/target/d1 - "
                          "Section is 'C\xc3\xa0rtella' (http://nohost/plone/target) !",
                          mailSent.get_payload(decode=True))
-
 
     def testExecuteFolderModify(self):
         # can happen as rules are not triggered on the rule root itself

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-10-20 14:14+0000\n"
+"POT-Creation-Date: 2013-05-21 22:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,31 +17,35 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: collective.contentrules.mailfromfield\n"
 
-#: ../actions/mail.py:197
+#: ../actions/mail.py:241
 msgid "A mail action that take the e-mail address from the content where the rule is activated."
 msgstr ""
 
-#: ../actions/mail.py:196
+#: ../actions/mail.py:240
 msgid "Add mail from field action"
 msgstr ""
 
-#: ../actions/mail.py:198
+#: ../actions/mail.py:242
 msgid "Configure element"
 msgstr ""
 
-#: ../vocabularies.py:21
+#: ../vocabularies.py:23
 msgid "From event target"
 msgstr ""
 
-#: ../vocabularies.py:20
+#: ../vocabularies.py:21
 msgid "From trigger object"
+msgstr ""
+
+#: ../vocabularies.py:22
+msgid "From trigger object parent"
 msgstr ""
 
 #: ../actions/mail.py:59
 msgid "Mail message"
 msgstr ""
 
-#: ../actions/mail.py:41
+#: ../actions/mail.py:40
 msgid "Put there the field name from which get the e-mail. You can provide an attribute name, a method name, an AT field name or ZMI property"
 msgstr ""
 
@@ -51,27 +55,27 @@ msgstr ""
 msgid "Send email to address taken from the content"
 msgstr ""
 
-#: ../actions/mail.py:33
+#: ../actions/mail.py:32
 msgid "Sender email"
 msgstr ""
 
-#: ../actions/mail.py:40
+#: ../actions/mail.py:39
 msgid "Source field"
 msgstr ""
 
-#: ../actions/mail.py:27
+#: ../actions/mail.py:26
 msgid "Subject"
 msgstr ""
 
-#: ../actions/mail.py:28
+#: ../actions/mail.py:27
 msgid "Subject of the message"
 msgstr ""
 
-#: ../actions/mail.py:49
+#: ../actions/mail.py:48
 msgid "Target element"
 msgstr ""
 
-#: ../actions/mail.py:34
+#: ../actions/mail.py:33
 msgid "The email address that sends the email. If no email is provided here, it will use the portal from address."
 msgstr ""
 
@@ -86,7 +90,7 @@ msgid "help_message"
 msgstr ""
 
 #. Default: "Choose to get the address info from the content where the rule is activated on or from the target element of the event."
-#: ../actions/mail.py:50
+#: ../actions/mail.py:49
 msgid "help_target"
 msgstr ""
 

@@ -9,6 +9,10 @@ Changelog
   [keul]
 - Do not try to send mail to empty string recipients
   [keul]
+- Refactoring
+  [alert]
+- Added parent option in the target vocabulary
+  [alert]
 
 0.2.0 (2013-05-02)
 ------------------
