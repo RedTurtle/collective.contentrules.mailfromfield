@@ -165,6 +165,7 @@ class MailActionExecutor(object):
         # Try to load data from the target object
         fieldName = str(self.element.fieldName)
         obj = self.get_target_obj()
+
         # 1: object attribute
         try:
             attr = obj.__getattribute__(fieldName)
@@ -181,6 +182,8 @@ class MailActionExecutor(object):
                 field = obj.getField(fieldName)
                 if field:
                     recipients = field.get(obj)
+                else:
+                    recipients = False
             else:
                 recipients = False
             if not recipients:
