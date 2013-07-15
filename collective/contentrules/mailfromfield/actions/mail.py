@@ -17,6 +17,8 @@ from Products.CMFPlone.utils import safe_unicode
 from Products.Archetypes.interfaces import IBaseContent
 
 from collective.contentrules.mailfromfield import messageFactory as _, logger
+import pd
+import pdb
 
 
 class IMailFromFieldAction(Interface):
@@ -124,7 +126,7 @@ class MailActionExecutor(object):
         '''Replace markers in text with the values in the mapping
         '''
         for key, value in self.mapping.iteritems():
-            text = text.replace('${%s}' % key, value)
+            text = text.replace('${%s}' % key, value.decode('utf-8'))
         return text
 
     def get_from(self):
