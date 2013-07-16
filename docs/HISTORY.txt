@@ -4,7 +4,7 @@ Changelog
 0.2.1 (unreleased)
 ------------------
 
-- fix errore unicode in replace "Sportelli preposti" [nicolasenno]
+- Fix unicode error while replacing strings [nicolasenno]
 - Do not fail if a rule is activated on a non-AT content [keul]
 - Do not try to send mail to empty string recipients [keul]
 - Refactoring [alert]
