@@ -17,8 +17,6 @@ from Products.CMFPlone.utils import safe_unicode
 from Products.Archetypes.interfaces import IBaseContent
 
 from collective.contentrules.mailfromfield import messageFactory as _, logger
-import pd
-import pdb
 
 
 class IMailFromFieldAction(Interface):
