@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.2.1 (unreleased)
+0.3.0 (2014-05-06)
 ------------------
 
 - Fix unicode error while replacing strings [nicolasenno]
