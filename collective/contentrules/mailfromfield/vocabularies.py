@@ -18,9 +18,10 @@ class TargetElementsVocabulary(object):
 
     def __call__(self, context):
         return SimpleVocabulary(
-                    [SimpleTerm(value=u'object', title=_(u'From trigger object')),
-                     SimpleTerm(value=u'parent', title=_(u'From trigger object parent')),
-                     SimpleTerm(value=u'target', title=_(u'From event target'))]
+                    [SimpleTerm(u'object', u'object', _(u"From rule's container")),
+                     SimpleTerm(u'target', u'target', _(u"From content that triggered the event")),
+                     SimpleTerm(u'parent', u'parent', _(u"From content's parent")),
+                     ]
                     )
 
 targetElements = TargetElementsVocabulary()

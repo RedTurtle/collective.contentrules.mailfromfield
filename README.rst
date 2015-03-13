@@ -4,7 +4,7 @@ Introduction
 ============
 
 This product will add to Plone a new content rules, someway similar to the default "*Send an email*" ones.
-The difference is that the email recipient is taken dinamically from the content itself, not from a
+The difference is that the email recipient is taken dinamically from a site content, not from a
 static list of values.
 
 In this way the same rule, applied in different places in the site, can send the message to different users.
@@ -19,14 +19,16 @@ In the rule configuration panel you need to fill a set of information:
     The e-mail subject. You can place inside this text some markers (see below).
 ``Sender email``
     The sender of the e-mail. You can leave this empty and automatically use the one from the
-    site mail settings.
+    general mail settings.
 ``Source field``
     You must put there the name of the attribute from which you want to retrieve the recipient
     e-mail. See next section.
 ``Target element``
-    You need to select if the recipient's e-mail must be taken from the object where the
-    rule is activated on ("*From trigger object*", default choice) or from the document that
-    really raised the event ("*From event target*").
+    You need to select if the recipient's e-mail must be taken from:
+    
+    * the container where the rules is activated on
+    * the content who notified the event that started the rule execution
+    * the parent of that content 
     
     See below for details.
 ``Mail message``
@@ -38,19 +40,28 @@ In the rule configuration panel you need to fill a set of information:
 How it take the email data
 --------------------------
 
-First of all you must choose the type of *target element*.
+First of all you must choose the *Target element*.
 
-If you choose to keep default "*From trigger object*" option, the data is read from the section you have
+If you choose to keep default "*From rule's container*" option address will be read from the section you have
 activated the rule on.
 
-*Example*: if you activated the rule on a folder called ``section`` and the rule  will raise event when
-working on a document called ``foo`` (like: modifying the document), the e-mail address will be taken
+*Example*: if you activated the rule on folder ``/site/section`` and the rule will raise event when
+working on a document ``/site/section/folder/foo`` the email address will be taken
 from the folder.
 
-Changing to "*From event target*" will change the behavior, trying to get e-mail data from the same
-attribute but looking for it on the object that raised the event.
+Changing to "*From content that triggered the event*" will change the behavior, trying to get email data
+from the content that raised the event.
 
-In the example above: we will look for the value from the document.
+*Example*: if you activated the rule on a folder ``/site/section`` and the rule  will raise event when
+working on a document ``/site/section/folder/foo`` the email address will be taken
+from the ``foo`` document.
+
+Finally, if you choose "*From content's parent*", adresses will the taken from the container of the content
+that triggered the event.
+
+*Example*: if you activated the rule on a folder ``/site/section`` and the rule  will raise event when
+working on a document ``/site/section/folder/foo`` the email address will be taken
+from ``folder``.
 
 What it try to read
 -------------------
@@ -65,8 +76,8 @@ The rule try to get from the object:
 The rule try to read, one after one, all this data. The first match found will be the one used;
 if not one give results, no e-mail is sent at all.
 
-Message markers
----------------
+Message interpolation
+---------------------
 
 Marker labels that follow can be used in the message text and subject.
 
@@ -87,7 +98,7 @@ customized as normal, but one of the field is ``director_email``.
 
 __ http://plone.org/products/signupsheet
 
-The scope there is that this e-mail address is notified when a user subscribe and the user
+We want that this e-mail address is notified when a user subscribe and the user
 itself put there the e-mail address of the proper director.
 
 To reach this we need to:
@@ -96,7 +107,7 @@ To reach this we need to:
 * add a filter condition based on content type *Registrant*
 * add an action using the "*Send email to address taken from the content*"
 * specify in the action the SignupSheet field with the director email
-* specify in the action that we want to take the email from the target object
+* specify in the action that we want to take the email from the target content
   (the Registrant itself)
 
 TODO
@@ -113,7 +124,6 @@ Requirements
 
 This product has been tested on:
 
-* Plone 3.3
 * Plone 4.2
 * Plone 4.3
 

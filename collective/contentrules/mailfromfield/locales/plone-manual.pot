@@ -15,11 +15,10 @@ msgstr ""
 "Language-Code: en\n"
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
-"Domain: collective.contentrules.mailfromfield\n"
+"Domain: plone\n"
 
 msgid "Send email to address taken from the content"
 msgstr ""
 
 msgid "Send an email, take the recipient from data of the content itself."
 msgstr ""
-

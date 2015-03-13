@@ -36,5 +36,5 @@
     schema=".mail.IMailFromFieldAction"
     factory=".mail.MailFromFieldAction"
     />
-         
+
 </configure>

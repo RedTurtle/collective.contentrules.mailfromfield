@@ -31,15 +31,15 @@ class IMailFromFieldAction(Interface):
     source = schema.TextLine(
         title=_(u"Sender email"),
         description=_(u"The email address that sends the email. If no email is "
-                         "provided here, it will use the portal from address."),
+                      u"provided here, it will use the portal from address."),
          required=False
          )
 
     fieldName = schema.TextLine(
         title=_(u"Source field"),
         description=_(u"Put there the field name from which get the e-mail. "
-                         "You can provide an attribute name, a method name, an AT field name or "
-                         "ZMI property"),
+                      u"You can provide an attribute name, a method name, an AT field name or "
+                      u"ZMI property"),
          required=True
          )
 
@@ -47,9 +47,9 @@ class IMailFromFieldAction(Interface):
         required=True,
         title=_(u"Target element"),
         description=_('help_target',
-                      default=(u"Choose to get the address info from the "
-                               u"content where the rule is activated on "
-                               u"or from the target element of the event.")
+                      default=(u"Choose to get the address info from: the container "
+                               u"where the rule is activated on, the content who triggered "
+                               u"the event or the parent of the triggering content.")
                       ),
         default='object',
         vocabulary='collective.contentrules.mailfromfield.vocabulary.targetElements',
@@ -216,7 +216,6 @@ class MailActionExecutor(object):
         Does send the mail
         '''
         mailhost = self.get_mailhost()
-
         source = self.get_from()
         recipients = self.get_recipients()
         subject = self.expand_markers(self.element.subject)

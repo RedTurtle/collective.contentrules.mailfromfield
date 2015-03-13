@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '0.3.1.dev0'
+version = '0.4.0.dev0'
 
 tests_require = ['Products.PloneTestCase', ]
 
@@ -14,7 +14,6 @@ setup(name='collective.contentrules.mailfromfield',
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
         "Framework :: Plone",
-        "Framework :: Plone :: 3.3",
         "Framework :: Plone :: 4.0",
         "Framework :: Plone :: 4.1",
         "Framework :: Plone :: 4.2",
