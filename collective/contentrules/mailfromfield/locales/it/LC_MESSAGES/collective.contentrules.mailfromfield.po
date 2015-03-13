@@ -68,7 +68,7 @@ msgstr "Oggetto del messaggio"
 
 #: ../actions/mail.py:48
 msgid "Target element"
-msgstr "Obbiettivo dell'elemento"
+msgstr "Obbiettivo dell'evento"
 
 #: ../actions/mail.py:33
 msgid "The email address that sends the email. If no email is provided here, it will use the portal from address."
