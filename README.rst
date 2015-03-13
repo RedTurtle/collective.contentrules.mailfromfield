@@ -114,7 +114,6 @@ TODO
 ====
 
 * why don't support also looking in annotations?
-* why don't support also multiple valued sources?
 * right now the rules check all mail source until one is found with a defined order;
   maybe is better to leave this choice to the configuration
 * Dexterity support (probably already there, but needs to be tested)
