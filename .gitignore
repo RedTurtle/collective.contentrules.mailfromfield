@@ -21,9 +21,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-src/drogevoeten.theme.egg-info
 src/*.theme.egg-info
-src/drogevoeten.theme.egg-info/*
 
 # Installer logs
 pip-log.txt
@@ -54,7 +52,6 @@ coverage.xml
 docs/_build/
 
 #add lib from static
-!/src/sbg.theme/src/sbg/theme/static/includes/lib/
 .eggs
 
 #add lib from static
