@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from Acquisition import aq_inner, aq_base
+from collective.contentrules.mailfromfield import messageFactory as _, logger
 from OFS.SimpleItem import SimpleItem
-from zope.component import adapts
-from zope.component.interfaces import ComponentLookupError
-from zope.interface import Interface, implements
-from zope.formlib import form
-from zope import schema
-
 from plone.app.contentrules.browser.formhelper import AddForm, EditForm
 from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
-
+from plone.stringinterp.interfaces import IStringInterpolator
+from Products.Archetypes.interfaces import IBaseContent
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
-
-from Products.Archetypes.interfaces import IBaseContent
-
-from collective.contentrules.mailfromfield import messageFactory as _, logger
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope import schema
+from zope.component import adapts
+from zope.component.interfaces import ComponentLookupError
+from zope.formlib import form
+from zope.interface import Interface, implements
 
 
 class IMailFromFieldAction(Interface):
@@ -30,40 +28,44 @@ class IMailFromFieldAction(Interface):
 
     source = schema.TextLine(
         title=_(u"Sender email"),
-        description=_(u"The email address that sends the email. If no email is "
-                      u"provided here, it will use the portal from address."),
-         required=False
-         )
+        description=_(u"The email address that sends the email. If no email is"
+                      u" provided here, it will use the portal from address."),
+        required=False
+        )
 
     fieldName = schema.TextLine(
         title=_(u"Source field"),
         description=_(u"Put there the field name from which get the e-mail. "
-                      u"You can provide an attribute name, a method name, an AT field name or "
-                      u"ZMI property"),
-         required=True
-         )
+                      u"You can provide an attribute name, a method name, "
+                      u"an AT field name or ZMI property"),
+        required=True
+        )
 
     target = schema.Choice(
         required=True,
         title=_(u"Target element"),
         description=_('help_target',
-                      default=(u"Choose to get the address info from: the container "
-                               u"where the rule is activated on, the content who triggered "
-                               u"the event or the parent of the triggering content.")
+                      default=(u"Choose to get the address info from: the"
+                               u"container where the rule is activated on,"
+                               u" the content who triggered the event or"
+                               u" the parent of the triggering content.")
                       ),
         default='object',
-        vocabulary='collective.contentrules.mailfromfield.vocabulary.targetElements',
+        vocabulary='collective.contentrules.mailfromfield.'
+                   'vocabulary.targetElements',
         )
 
     message = schema.Text(
         title=_(u"Mail message"),
-        description=_('help_message',
-                        default=u"Type in here the message that you want to mail. Some "
-                                 "defined content can be replaced: ${title} will be replaced by the title "
-                                 "of the target item. ${url} will be replaced by the URL of the item. "
-                                 "${section_url} will be replaced by the URL of the content the rule is applied to. "
-                                 "${section_name} will be replaced by the title of the content the rule is applied "
-                                 "to."),
+        description=_(
+            'help_message',
+            default=u"Type in here the message that you want to mail. Some "
+                    u"defined content can be replaced: ${title} will be "
+                    u"replaced by the title of the target item. ${url} will "
+                    u"be replaced by the URL of the item. ""${section_url} "
+                    u"will be replaced by the URL of the content the rule is "
+                    u"applied to. ""${section_name} will be replaced by the "
+                    u"title of the content the rule is applied ""to."),
         required=True
         )
 
@@ -111,13 +113,9 @@ class MailActionExecutor(object):
     def get_mapping(self):
         '''Return a mapping that will replace markers in the template
         '''
-        obj_title = safe_unicode(self.event.object.Title())
-        event_url = self.event.object.absolute_url()
         section_title = safe_unicode(self.context.Title())
         section_url = self.context.absolute_url()
-        return {"url": event_url,
-                "title": obj_title,
-                "section_name": section_title,
+        return {"section_name": section_title,
                 "section_url": section_url}
 
     def expand_markers(self, text):
@@ -218,8 +216,23 @@ class MailActionExecutor(object):
         mailhost = self.get_mailhost()
         source = self.get_from()
         recipients = self.get_recipients()
+
+        obj = self.event.object
+
+        interpolator = IStringInterpolator(obj)
+
+        # No way to use self.context (where rule is fired) in interpolator
+        # self.context in interpolator is the obj given
+        # And having  two interpolators is strange, because they
+        # both adapt fully. Unless you can somehow adapt it to
+        # 'firing a rule' event, which isn't available to my knowledge.
+
+        # Section title/urk
         subject = self.expand_markers(self.element.subject)
         message = self.expand_markers(self.element.message)
+        # All other stringinterp
+        subject = interpolator(self.element.subject).strip()
+        message = interpolator(self.element.message).strip()
 
         email_charset = self.portal.getProperty('email_charset')
 
@@ -242,8 +255,12 @@ class MailFromFieldAddForm(AddForm):
     """
     form_fields = form.FormFields(IMailFromFieldAction)
     label = _(u"Add mail from field action")
-    description = _(u"A mail action that take the e-mail address from the content where the rule is activated.")
+    description = _(u"A mail action that take the e-mail address "
+                    u"from the content where the rule is activated.")
     form_name = _(u"Configure element")
+
+    # custom template will allow us to add help text
+    template = ViewPageTemplateFile('templates/mailfromfield.pt')
 
     def create(self, data):
         a = MailFromFieldAction()
@@ -257,5 +274,9 @@ class MailFromFieldEditForm(EditForm):
     """
     form_fields = form.FormFields(IMailFromFieldAction)
     label = _(u"Add mail from field action")
-    description = _(u"A mail action that take the e-mail address from the content where the rule is activated.")
+    description = _(u"A mail action that take the e-mail address from the "
+                    u"content where the rule is activated.")
     form_name = _(u"Configure element")
+
+    # custom template will allow us to add help text
+    template = ViewPageTemplateFile('templates/mailfromfield.pt')
