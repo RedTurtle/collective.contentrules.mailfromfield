@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.5 (unreleased)
+0.5.0 (2020-08-12)
 ------------------
 
 - Migrate code to Plone 5
