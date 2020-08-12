@@ -1,10 +1,10 @@
 Changelog
 =========
 
-0.4.1 (unreleased)
+0.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Migrate code to Plone 5
 
 
 0.4.0 (2015-03-13)

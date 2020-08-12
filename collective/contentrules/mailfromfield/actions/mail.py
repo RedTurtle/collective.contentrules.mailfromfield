@@ -2,21 +2,22 @@
 
 from Acquisition import aq_inner, aq_base
 from OFS.SimpleItem import SimpleItem
+from Products.Archetypes.interfaces import IBaseContent
+from Products.CMFCore.utils import getToolByName
+from Products.CMFPlone.utils import safe_unicode
+from collective.contentrules.mailfromfield import messageFactory as _, logger
+from plone.app.contentrules.actions import ActionAddForm
+from plone.app.contentrules.actions import ActionEditForm
+from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
+from zope import schema
+from zope.component import adapter
 from zope.component import adapts
 from zope.component.interfaces import ComponentLookupError
 from zope.interface import Interface, implements
-from zope.formlib import form
-from zope import schema
+from zope.interface import implementer
+from zope.component import getUtility
+from plone.registry.interfaces import IRegistry
 
-from plone.app.contentrules.browser.formhelper import AddForm, EditForm
-from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
-
-from Products.CMFCore.utils import getToolByName
-from Products.CMFPlone.utils import safe_unicode
-
-from Products.Archetypes.interfaces import IBaseContent
-
-from collective.contentrules.mailfromfield import messageFactory as _, logger
 
 
 class IMailFromFieldAction(Interface):
@@ -68,11 +69,11 @@ class IMailFromFieldAction(Interface):
         )
 
 
+@implementer(IMailFromFieldAction, IRuleElementData)
 class MailFromFieldAction(SimpleItem):
     """
     The implementation of the action defined before
     """
-    implements(IMailFromFieldAction, IRuleElementData)
 
     subject = u''
     source = u''
@@ -89,11 +90,11 @@ class MailFromFieldAction(SimpleItem):
                  mapping=dict(fieldName=self.fieldName))
 
 
+@implementer(IExecutable)
+@adapter(Interface, IMailFromFieldAction, Interface)
 class MailActionExecutor(object):
     """The executor for this action.
     """
-    implements(IExecutable)
-    adapts(Interface, IMailFromFieldAction, Interface)
 
     def __init__(self, context, element, event):
         self.context = context
@@ -135,13 +136,23 @@ class MailActionExecutor(object):
         source = self.element.source
         if source:
             return source
+
         # no source provided, looking for the site wide "from" email address
-        from_address = self.portal.getProperty('email_from_address')
+        from_address = None
+        registry = getUtility(IRegistry)
+        record = registry.records.get('plone.email_from_address', None)
+        if record:
+            from_address = record.value
+
         if not from_address:
             raise ValueError('You must provide a source address for this '
                              'action or enter an email in the portal '
                              'properties')
-        from_name = self.portal.getProperty('email_from_name')
+
+        from_name = ''
+        record_name = registry.records.get('plone.email_from_name', None)
+        if record_name:
+            from_name = record_name.value
         source = ("%s <%s>" % (from_name, from_address)).strip()
         return source
 
@@ -221,7 +232,11 @@ class MailActionExecutor(object):
         subject = self.expand_markers(self.element.subject)
         message = self.expand_markers(self.element.message)
 
-        email_charset = self.portal.getProperty('email_charset')
+        email_charset = None
+        registry = getUtility(IRegistry)
+        record = registry.records.get('plone.email_charset', None)
+        if record:
+            email_charset = record.value
 
         for email_recipient in recipients:
             logger.debug('sending to: %s' % email_recipient)
@@ -236,26 +251,22 @@ class MailActionExecutor(object):
         return True
 
 
-class MailFromFieldAddForm(AddForm):
+class MailFromFieldAddForm(ActionAddForm):
     """
     An add form for the mail action
     """
-    form_fields = form.FormFields(IMailFromFieldAction)
+    schema = IMailFromFieldAction
     label = _(u"Add mail from field action")
     description = _(u"A mail action that take the e-mail address from the content where the rule is activated.")
     form_name = _(u"Configure element")
-
-    def create(self, data):
-        a = MailFromFieldAction()
-        form.applyChanges(a, self.form_fields, data)
-        return a
+    Type = MailFromFieldAction
 
 
-class MailFromFieldEditForm(EditForm):
+class MailFromFieldEditForm(ActionEditForm):
     """
     An edit form for the mail action
     """
-    form_fields = form.FormFields(IMailFromFieldAction)
+    schema = IMailFromFieldAction
     label = _(u"Add mail from field action")
     description = _(u"A mail action that take the e-mail address from the content where the rule is activated.")
     form_name = _(u"Configure element")
