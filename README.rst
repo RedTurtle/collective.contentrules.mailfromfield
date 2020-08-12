@@ -25,16 +25,16 @@ In the rule configuration panel you need to fill a set of information:
     e-mail. See next section.
 ``Target element``
     You need to select if the recipient's e-mail must be taken from:
-    
+
     * the container where the rules is activated on
     * the content who notified the event that started the rule execution
-    * the parent of that content 
-    
+    * the parent of that content
+
     See below for details.
 ``Mail message``
     The body text of the e-mail that will be sent. The text is the same for all section where
     the rule is activated on.
-    
+
     You can place inside this text some markers (see below).
 
 How it take the email data
@@ -123,8 +123,8 @@ Requirements
 
 This product has been tested on:
 
-* Plone 4.2
-* Plone 4.3
+* Plone 5.0
+* Plone 5.1
 
 Credits
 =======
