@@ -123,6 +123,8 @@ Requirements
 
 This product has been tested on:
 
+* Plone 4.2 with 0.4 version
+* Plone 4.3 with 0.4 version
 * Plone 5.0
 * Plone 5.1
 
