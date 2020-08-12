@@ -17,13 +17,13 @@ setup(
     # Get more strings from
     # http://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
+        "Environment :: Web Environment",
         "Framework :: Plone",
         "Framework :: Plone :: 5.0",
         "Framework :: Plone :: 5.1",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.7",
-        "Development Status :: 4 - Beta",
-        "Topic :: Communications :: Email",
+        "Operating System :: OS Independent",
         "License :: OSI Approved :: GNU General Public License (GPL)",
     ],
     keywords="plone rules mail plonegov",
