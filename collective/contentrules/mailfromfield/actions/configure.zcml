@@ -14,14 +14,14 @@
   <browser:page
     for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
     name="plone.actions.MailFromField"
-    class=".mail.MailFromFieldAddForm"
+    class=".mail.MailFromFieldAddFormView"
     permission="cmf.ManagePortal"
     />
 
   <browser:page
     for=".mail.IMailFromFieldAction"
     name="edit"
-    class=".mail.MailFromFieldEditForm"
+    class=".mail.MailFromFieldEditFormView"
     permission="cmf.ManagePortal"
     />
 

@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
-
 from Acquisition import aq_inner, aq_base
+from collective.contentrules.mailfromfield import messageFactory as _, logger
 from OFS.SimpleItem import SimpleItem
+from plone.app.contentrules.actions.mail import MailAddForm
+from plone.app.contentrules.actions.mail import MailEditForm
+from plone.app.contentrules.browser.formhelper import ContentRuleFormWrapper
+from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
+from plone.registry.interfaces import IRegistry
+from plone.stringinterp.interfaces import IStringInterpolator
 from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
-from collective.contentrules.mailfromfield import messageFactory as _, logger
-from plone.app.contentrules.actions import ActionAddForm
-from plone.app.contentrules.actions import ActionEditForm
-from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
+from six.moves import filter
 from zope import schema
 from zope.component import adapter
-from zope.component.interfaces import ComponentLookupError
-from zope.interface import Interface
-from zope.interface import implementer
 from zope.component import getUtility
-from plone.registry.interfaces import IRegistry
+from zope.component.interfaces import ComponentLookupError
+from zope.interface import implementer
+from zope.interface import Interface
+
 import six
-from six.moves import filter
 
 
 class IMailFromFieldAction(Interface):
@@ -67,12 +69,9 @@ class IMailFromFieldAction(Interface):
         title=_(u"Mail message"),
         description=_(
             "help_message",
-            default=u"Type in here the message that you want to mail. Some "
-            "defined content can be replaced: ${title} will be replaced by the title "
-            "of the target item. ${url} will be replaced by the URL of the item. "
-            "${section_url} will be replaced by the URL of the content the rule is applied to. "
-            "${section_name} will be replaced by the title of the content the rule is applied "
-            "to.",
+            default=u"Type in here the message that you want to mail. You can "
+            u"use some dynamic strings that will be replaced with relative "
+            "values. See Substitutions table to see all available options.",
         ),
         required=True,
     )
@@ -128,8 +127,8 @@ class MailActionExecutor(object):
         section_title = safe_unicode(self.context.Title())
         section_url = self.context.absolute_url()
         return {
-            "url": event_url,
-            "title": obj_title,
+            # "url": event_url,
+            # "title": obj_title,
             "section_name": section_title,
             "section_url": section_url,
         }
@@ -245,8 +244,23 @@ class MailActionExecutor(object):
         mailhost = self.get_mailhost()
         source = self.get_from()
         recipients = self.get_recipients()
+
+        obj = self.event.object
+
+        interpolator = IStringInterpolator(obj)
+
+        # No way to use self.context (where rule is fired) in interpolator
+        # self.context in interpolator is the obj given
+        # And having  two interpolators is strange, because they
+        # both adapt fully. Unless you can somehow adapt it to
+        # 'firing a rule' event, which isn't available to my knowledge.
+
+        # Section title/urk
         subject = self.expand_markers(self.element.subject)
         message = self.expand_markers(self.element.message)
+        # All other stringinterp
+        subject = interpolator(self.element.subject).strip()
+        message = interpolator(self.element.message).strip()
 
         email_charset = None
         registry = getUtility(IRegistry)
@@ -256,50 +270,30 @@ class MailActionExecutor(object):
 
         for email_recipient in recipients:
             logger.debug("sending to: %s" % email_recipient)
-            try:  # sending mail in Plone 4
-                mailhost.send(
-                    message,
-                    mto=email_recipient,
-                    mfrom=source,
-                    subject=subject,
-                    charset=email_charset,
-                )
-            except:  # sending mail in Plone 3
-                mailhost.secureSend(
-                    message,
-                    email_recipient,
-                    source,
-                    subject=subject,
-                    subtype="plain",
-                    charset=email_charset,
-                    debug=False,
-                    From=source,
-                )
+            mailhost.send(
+                message,
+                mto=email_recipient,
+                mfrom=source,
+                subject=subject,
+                charset=email_charset,
+            )
         return True
 
 
-class MailFromFieldAddForm(ActionAddForm):
-    """
-    An add form for the mail action
-    """
+class MailFromFieldAddForm(MailAddForm):
 
     schema = IMailFromFieldAction
-    label = _(u"Add mail from field action")
-    description = _(
-        u"A mail action that take the e-mail address from the content where the rule is activated."
-    )
-    form_name = _(u"Configure element")
     Type = MailFromFieldAction
 
 
-class MailFromFieldEditForm(ActionEditForm):
-    """
-    An edit form for the mail action
-    """
+class MailFromFieldAddFormView(ContentRuleFormWrapper):
+    form = MailFromFieldAddForm
+
+
+class MailFromFieldEditForm(MailEditForm):
 
     schema = IMailFromFieldAction
-    label = _(u"Add mail from field action")
-    description = _(
-        u"A mail action that take the e-mail address from the content where the rule is activated."
-    )
-    form_name = _(u"Configure element")
+
+
+class MailFromFieldEditFormView(ContentRuleFormWrapper):
+    form = MailFromFieldEditForm
