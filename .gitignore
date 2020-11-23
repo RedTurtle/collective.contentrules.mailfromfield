@@ -39,4 +39,3 @@ reports/
 !.gitignore
 !.gitkeep
 !.travis.yml
-!src/redturtle
