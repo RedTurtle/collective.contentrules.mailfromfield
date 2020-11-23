@@ -1,4 +1,6 @@
+extra
 .coverage
+.python-version
 *.egg-info
 *.log
 *.mo
@@ -16,6 +18,7 @@ local/
 node_modules/
 parts/
 src/*
+dist/*
 test.plone_addon/
 var/
 # files
@@ -27,6 +30,8 @@ output.xml
 pip-selfcheck.json
 report.html
 .vscode/
+.tox/
+reports/
 # excludes
 !.coveragerc
 !.editorconfig
@@ -34,4 +39,3 @@ report.html
 !.gitignore
 !.gitkeep
 !.travis.yml
-

@@ -1,17 +1,13 @@
 Changelog
 =========
 
-0.5.1 (unreleased)
+1.0.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
-
-0.5.0 (2020-08-12)
-------------------
-
-- Migrate code to Plone 5
-
+- Migrate code to Plone 5/python 3.
+  [lucabel]
+- Add support for plone.stringinterp.
+  [cekk]
 
 0.4.0 (2015-03-13)
 ------------------
