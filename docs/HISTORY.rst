@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.0.0 (unreleased)
+1.0.0 (2020-11-23)
 ------------------
 
 - Migrate code to Plone 5/python 3.
