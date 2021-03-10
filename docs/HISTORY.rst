@@ -4,7 +4,10 @@ Changelog
 1.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Allow to get to the end of the action execution if no mail is provided.
+  You don't want the page to break if the email is missing. 
+  For the anonymous user this wold be a bad UX
+  [lucabel]
 
 
 1.0.0 (2020-11-23)

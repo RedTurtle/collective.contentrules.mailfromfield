@@ -222,6 +222,12 @@ class MailActionExecutor(object):
             #     logger.debug('getting e-mail from %s AT field' % fieldName)
             pass
 
+        # maybe for some reason we could execute this action without any
+        # recipients. It can't be that the page breaks due to this kind
+        # of problem
+        if not recipients:
+            return []
+
         # now transform recipients in a iterator, if needed
         if type(recipients) == str or type(recipients) == six.text_type:
             recipients = [str(recipients)]
