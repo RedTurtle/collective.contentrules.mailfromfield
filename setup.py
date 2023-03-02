@@ -3,7 +3,7 @@ import os
 
 version = "1.0.2.dev0"
 
-tests_require = ["Products.PloneTestCase"]
+tests_require = ["plone.app.robotframework"]
 
 setup(
     name="collective.contentrules.mailfromfield",

@@ -1,6 +1,10 @@
 # -*- coding: UTF-8 -*-
 
-from email.MIMEText import MIMEText
+try:
+    from email.mime.text import MIMEText
+except ImportError:
+    from email.MIMEText import MIMEText
+
 from zope.component import getUtility, getMultiAdapter, getSiteManager
 from zope.component.interfaces import IObjectEvent
 from zope.interface import implementer
@@ -16,9 +20,8 @@ from collective.contentrules.mailfromfield.actions.mail import (
     MailFromFieldEditForm,
     MailFromFieldAddForm,
 )
-
+from Products.MailHost import MailHost
 from Products.MailHost.interfaces import IMailHost
-from Products.SecureMailHost.SecureMailHost import SecureMailHost
 import six
 
 # basic test structure copied from plone.app.contentrules test_action_mail.py
@@ -30,7 +33,7 @@ class DummyEvent(object):
         self.object = object
 
 
-class DummySecureMailHost(SecureMailHost):
+class DummySecureMailHost(MailHost.MailHost):
     meta_type = "Dummy secure Mail Host"
 
     def __init__(self, id):
