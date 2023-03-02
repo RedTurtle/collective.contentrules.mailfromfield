@@ -118,8 +118,8 @@ class MailActionExecutor(object):
 
     def get_mapping(self):
         """Return a mapping that will replace markers in the template"""
-        obj_title = safe_unicode(self.event.object.Title())
-        event_url = self.event.object.absolute_url()
+        obj_title = safe_unicode(self.event.object.Title())  # NOQA
+        event_url = self.event.object.absolute_url()  # NOQA
         section_title = safe_unicode(self.context.Title())
         section_url = self.context.absolute_url()
         return {
