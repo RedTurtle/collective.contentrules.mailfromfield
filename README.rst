@@ -17,12 +17,12 @@
     :target: https://pypi.org/project/collective.contentrules.mailfromfield/
     :alt: License
 
-.. image:: https://github.com/collective/collective.contentrules.mailfromfield/actions/workflows/tests.yml/badge.svg
-    :target: https://github.com/collective/collective.contentrules.mailfromfield/actions
+.. image:: https://github.com/RedTurtle/collective.contentrules.mailfromfield/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/RedTurtle/collective.contentrules.mailfromfield/actions
     :alt: Tests
     
-.. image:: https://coveralls.io/repos/github/collective/collective.contentrules.mailfromfield/badge.svg?branch=main
-    :target: https://coveralls.io/github/collective/collective.contentrules.mailfromfield?branch=main
+.. image:: https://coveralls.io/repos/github/RedTurtle/collective.contentrules.mailfromfield/badge.svg?branch=main
+    :target: https://coveralls.io/github/RedTurtle/collective.contentrules.mailfromfield?branch=main
     :alt: Coverage
 
 
