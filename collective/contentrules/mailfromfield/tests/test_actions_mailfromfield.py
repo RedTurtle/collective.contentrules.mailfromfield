@@ -65,13 +65,11 @@ class TestMailAction(ContentRulesTestCase):
     def testInvokeAddView(self):
         element = getUtility(IRuleAction, name="plone.actions.MailFromField")
         storage = getUtility(IRuleStorage)
-        storage[u"foo"] = Rule()
+        storage["foo"] = Rule()
         rule = self.portal.restrictedTraverse("++rule++foo")
 
         adding = getMultiAdapter((rule, self.portal.REQUEST), name="+action")
-        addview = getMultiAdapter(
-            (adding, self.portal.REQUEST), name=element.addview
-        )
+        addview = getMultiAdapter((adding, self.portal.REQUEST), name=element.addview)
         self.failUnless(isinstance(addview, MailFromFieldAddForm))
 
         addview.createAndAdd(
@@ -95,9 +93,7 @@ class TestMailAction(ContentRulesTestCase):
     def testInvokeEditView(self):
         element = getUtility(IRuleAction, name="plone.actions.MailFromField")
         e = MailFromFieldAction()
-        editview = getMultiAdapter(
-            (e, self.folder.REQUEST), name=element.editview
-        )
+        editview = getMultiAdapter((e, self.folder.REQUEST), name=element.editview)
         self.failUnless(isinstance(editview, MailFromFieldEditForm))
 
     def testExecuteNoSource(self):
@@ -111,9 +107,7 @@ class TestMailAction(ContentRulesTestCase):
         e.fieldName = "foo_attr"
         e.target = "object"
         self.folder.foo_attr = "member1@dummy.org"
-        ex = getMultiAdapter(
-            (self.folder, e, DummyEvent(self.folder.d1)), IExecutable
-        )
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)), IExecutable)
         self.assertRaises(ValueError, ex)
         # if we provide a site mail address this won't fail anymore
         sm.manage_changeProperties(
@@ -125,16 +119,10 @@ class TestMailAction(ContentRulesTestCase):
         ex()
         self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
         mailSent = dummyMailHost.sent[0]
-        self.assertEqual(
-            'text/plain; charset="utf-8"', mailSent.get("Content-Type")
-        )
+        self.assertEqual('text/plain; charset="utf-8"', mailSent.get("Content-Type"))
         self.assertEqual("member1@dummy.org", mailSent.get("To"))
-        self.assertEqual(
-            "The Big Boss <manager@portal.be>", mailSent.get("From")
-        )
-        self.assertEqual(
-            "Document created !", mailSent.get_payload(decode=True)
-        )
+        self.assertEqual("The Big Boss <manager@portal.be>", mailSent.get("From"))
+        self.assertEqual("Document created !", mailSent.get_payload(decode=True))
 
     def testExecuteSimpleByAttribute(self):
         self.loginAsPortalOwner()
@@ -147,16 +135,12 @@ class TestMailAction(ContentRulesTestCase):
         e.source = "foo@bar.be"
         e.fieldName = "foo_attr"
         e.target = "object"
-        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
-        ex = getMultiAdapter(
-            (self.folder, e, DummyEvent(self.folder.d1)), IExecutable
-        )
+        e.message = "Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)), IExecutable)
         ex()
         self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
         mailSent = dummyMailHost.sent[0]
-        self.assertEqual(
-            'text/plain; charset="utf-8"', mailSent.get("Content-Type")
-        )
+        self.assertEqual('text/plain; charset="utf-8"', mailSent.get("Content-Type"))
         self.assertEqual("member1@dummy.org", mailSent.get("To"))
         self.assertEqual("foo@bar.be", mailSent.get("From"))
         self.assertEqual(
@@ -176,16 +160,12 @@ class TestMailAction(ContentRulesTestCase):
         e.source = "foo@bar.be"
         e.fieldName = "foo_attr"
         e.target = "target"
-        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
-        ex = getMultiAdapter(
-            (self.folder, e, DummyEvent(self.folder.d1)), IExecutable
-        )
+        e.message = "Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)), IExecutable)
         ex()
         self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
         mailSent = dummyMailHost.sent[0]
-        self.assertEqual(
-            'text/plain; charset="utf-8"', mailSent.get("Content-Type")
-        )
+        self.assertEqual('text/plain; charset="utf-8"', mailSent.get("Content-Type"))
         self.assertEqual("member1@dummy.org", mailSent.get("To"))
         self.assertEqual("foo@bar.be", mailSent.get("From"))
         self.assertEqual(
@@ -205,16 +185,12 @@ class TestMailAction(ContentRulesTestCase):
         e.source = "foo@bar.be"
         e.fieldName = "Description"
         e.target = "object"
-        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
-        ex = getMultiAdapter(
-            (self.folder, e, DummyEvent(self.folder.d1)), IExecutable
-        )
+        e.message = "Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)), IExecutable)
         ex()
         self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
         mailSent = dummyMailHost.sent[0]
-        self.assertEqual(
-            'text/plain; charset="utf-8"', mailSent.get("Content-Type")
-        )
+        self.assertEqual('text/plain; charset="utf-8"', mailSent.get("Content-Type"))
         self.assertEqual("member1@dummy.org", mailSent.get("To"))
         self.assertEqual("foo@bar.be", mailSent.get("From"))
         self.assertEqual(
@@ -234,16 +210,12 @@ class TestMailAction(ContentRulesTestCase):
         e.source = "foo@bar.be"
         e.fieldName = "text"
         e.target = "target"
-        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
-        ex = getMultiAdapter(
-            (self.folder, e, DummyEvent(self.folder.d1)), IExecutable
-        )
+        e.message = "Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)), IExecutable)
         ex()
         self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
         mailSent = dummyMailHost.sent[0]
-        self.assertEqual(
-            'text/plain; charset="utf-8"', mailSent.get("Content-Type")
-        )
+        self.assertEqual('text/plain; charset="utf-8"', mailSent.get("Content-Type"))
         self.assertEqual("member1@dummy.org", mailSent.get("To"))
         self.assertEqual("foo@bar.be", mailSent.get("From"))
         self.assertEqual(
@@ -254,9 +226,7 @@ class TestMailAction(ContentRulesTestCase):
 
     def testExecuteSimpleByCMFProperty(self):
         self.loginAsPortalOwner()
-        self.folder.manage_addProperty(
-            "foo_property", "member1@dummy.org", "string"
-        )
+        self.folder.manage_addProperty("foo_property", "member1@dummy.org", "string")
         sm = getSiteManager(self.portal)
         sm.unregisterUtility(provided=IMailHost)
         dummyMailHost = DummySecureMailHost("dMailhost")
@@ -265,16 +235,12 @@ class TestMailAction(ContentRulesTestCase):
         e.source = "foo@bar.be"
         e.fieldName = "foo_property"
         e.target = "object"
-        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
-        ex = getMultiAdapter(
-            (self.folder, e, DummyEvent(self.folder.d1)), IExecutable
-        )
+        e.message = "Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)), IExecutable)
         ex()
         self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
         mailSent = dummyMailHost.sent[0]
-        self.assertEqual(
-            'text/plain; charset="utf-8"', mailSent.get("Content-Type")
-        )
+        self.assertEqual('text/plain; charset="utf-8"', mailSent.get("Content-Type"))
         self.assertEqual("member1@dummy.org", mailSent.get("To"))
         self.assertEqual("foo@bar.be", mailSent.get("From"))
         self.assertEqual(
@@ -295,16 +261,12 @@ class TestMailAction(ContentRulesTestCase):
         e.source = "foo@bar.be"
         e.fieldName = "foo_property"
         e.target = "object"
-        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
-        ex = getMultiAdapter(
-            (self.folder, e, DummyEvent(self.folder)), IExecutable
-        )
+        e.message = "Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder)), IExecutable)
         ex()
         self.failUnless(isinstance(dummyMailHost.sent[0], MIMEText))
         mailSent = dummyMailHost.sent[0]
-        self.assertEqual(
-            'text/plain; charset="utf-8"', mailSent.get("Content-Type")
-        )
+        self.assertEqual('text/plain; charset="utf-8"', mailSent.get("Content-Type"))
         self.assertEqual("member1@dummy.org", mailSent.get("To"))
         self.assertEqual("foo@bar.be", mailSent.get("From"))
         self.assertEqual(
@@ -324,10 +286,8 @@ class TestMailAction(ContentRulesTestCase):
         e.source = "foo@bar.be"
         e.fieldName = "foo_attr"
         e.target = "object"
-        e.message = u"Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
-        ex = getMultiAdapter(
-            (self.folder, e, DummyEvent(self.folder.d1)), IExecutable
-        )
+        e.message = "Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
+        ex = getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)), IExecutable)
         ex()
         self.assertEqual(dummyMailHost.sent, [])
 

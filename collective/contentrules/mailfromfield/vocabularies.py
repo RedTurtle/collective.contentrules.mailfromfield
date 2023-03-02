@@ -13,19 +13,18 @@ from collective.contentrules.mailfromfield import messageFactory as _
 
 @implementer(IVocabularyFactory)
 class TargetElementsVocabulary(object):
-    """Vocabulary factory for possible rule target
-    """
+    """Vocabulary factory for possible rule target"""
 
     def __call__(self, context):
         return SimpleVocabulary(
             [
-                SimpleTerm(u"object", u"object", _(u"From rule's container")),
+                SimpleTerm("object", "object", _("From rule's container")),
                 SimpleTerm(
-                    u"target",
-                    u"target",
-                    _(u"From content that triggered the event"),
+                    "target",
+                    "target",
+                    _("From content that triggered the event"),
                 ),
-                SimpleTerm(u"parent", u"parent", _(u"From content's parent")),
+                SimpleTerm("parent", "parent", _("From content's parent")),
             ]
         )
 
