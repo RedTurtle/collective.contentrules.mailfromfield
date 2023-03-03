@@ -30,7 +30,7 @@
     title="Send email to address taken from the content"
     description="Send an email, take the recipient from data of the content itself."
     for="*"
-    event="zope.component.interfaces.IObjectEvent"
+    event="zope.interface.interfaces.IObjectEvent"
     addview="plone.actions.MailFromField"
     editview="edit"
     schema=".mail.IMailFromFieldAction"

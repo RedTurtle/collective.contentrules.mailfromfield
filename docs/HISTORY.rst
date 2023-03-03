@@ -1,10 +1,11 @@
 Changelog
 =========
 
-1.0.2 (unreleased)
+1.1.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Plone 6 support
+  [foxtrot-dfm1]
 
 
 1.0.1 (2021-03-10)

@@ -15,7 +15,7 @@ from plone.contentrules.engine.interfaces import IRuleStorage
 from plone.contentrules.rule.interfaces import IExecutable, IRuleAction
 from plone.testing.zope import login
 from zope.component import getMultiAdapter, getUtility
-from zope.component.interfaces import IObjectEvent
+from zope.interface.interfaces import IObjectEvent
 from zope.interface import implementer
 
 

@@ -12,9 +12,11 @@ from plone.stringinterp.interfaces import IStringInterpolator
 from Products.CMFPlone.utils import safe_unicode
 from six.moves import filter
 from zope import schema
-from zope.component import adapter, getUtility
-from zope.component.interfaces import ComponentLookupError
-from zope.interface import implementer, Interface
+from zope.component import adapter
+from zope.component import getUtility
+from zope.interface import implementer
+from zope.interface import Interface
+from zope.interface.interfaces import ComponentLookupError
 
 import six
 
