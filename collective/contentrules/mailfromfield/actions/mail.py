@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
-from Acquisition import aq_inner, aq_base
-from collective.contentrules.mailfromfield import messageFactory as _, logger
+from Acquisition import aq_base, aq_inner
+from collective.contentrules.mailfromfield import logger
+from collective.contentrules.mailfromfield import messageFactory as _
 from OFS.SimpleItem import SimpleItem
-from plone.app.contentrules.actions.mail import MailAddForm
-from plone.app.contentrules.actions.mail import MailEditForm
+from plone import api
+from plone.app.contentrules.actions.mail import MailAddForm, MailEditForm
 from plone.app.contentrules.browser.formhelper import ContentRuleFormWrapper
-from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
+from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
 from plone.registry.interfaces import IRegistry
 from plone.stringinterp.interfaces import IStringInterpolator
-from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from six.moves import filter
 from zope import schema
@@ -22,43 +22,42 @@ import six
 
 
 class IMailFromFieldAction(Interface):
-    """Definition of the configuration available for a mail action
-    """
+    """Definition of the configuration available for a mail action"""
 
     subject = schema.TextLine(
-        title=_(u"Subject"),
-        description=_(u"Subject of the message"),
+        title=_("Subject"),
+        description=_("Subject of the message"),
         required=True,
     )
 
     source = schema.TextLine(
-        title=_(u"Sender email"),
+        title=_("Sender email"),
         description=_(
-            u"The email address that sends the email. If no email is "
-            u"provided here, it will use the portal from address."
+            "The email address that sends the email. If no email is "
+            "provided here, it will use the portal from address."
         ),
         required=False,
     )
 
     fieldName = schema.TextLine(
-        title=_(u"Source field"),
+        title=_("Source field"),
         description=_(
-            u"Put there the field name from which get the e-mail. "
-            u"You can provide an attribute name, a method name, an AT field name or "
-            u"ZMI property"
+            "Put there the field name from which get the e-mail. "
+            "You can provide an attribute name, a method name, an AT field name or "
+            "ZMI property"
         ),
         required=True,
     )
 
     target = schema.Choice(
         required=True,
-        title=_(u"Target element"),
+        title=_("Target element"),
         description=_(
             "help_target",
             default=(
-                u"Choose to get the address info from: the container "
-                u"where the rule is activated on, the content who triggered "
-                u"the event or the parent of the triggering content."
+                "Choose to get the address info from: the container "
+                "where the rule is activated on, the content who triggered "
+                "the event or the parent of the triggering content."
             ),
         ),
         default="object",
@@ -66,11 +65,11 @@ class IMailFromFieldAction(Interface):
     )
 
     message = schema.Text(
-        title=_(u"Mail message"),
+        title=_("Mail message"),
         description=_(
             "help_message",
-            default=u"Type in here the message that you want to mail. You can "
-            u"use some dynamic strings that will be replaced with relative "
+            default="Type in here the message that you want to mail. You can "
+            "use some dynamic strings that will be replaced with relative "
             "values. See Substitutions table to see all available options.",
         ),
         required=True,
@@ -83,11 +82,11 @@ class MailFromFieldAction(SimpleItem):
     The implementation of the action defined before
     """
 
-    subject = u""
-    source = u""
-    fieldName = u""
-    target = u""
-    message = u""
+    subject = ""
+    source = ""
+    fieldName = ""
+    target = ""
+    message = ""
 
     element = "plone.actions.MailFromField"
 
@@ -95,7 +94,7 @@ class MailFromFieldAction(SimpleItem):
     def summary(self):
         return _(
             "action_summary",
-            default=u'Email to users defined in the "${fieldName}" data',
+            default='Email to users defined in the "${fieldName}" data',
             mapping=dict(fieldName=self.fieldName),
         )
 
@@ -103,8 +102,7 @@ class MailFromFieldAction(SimpleItem):
 @implementer(IExecutable)
 @adapter(Interface, IMailFromFieldAction, Interface)
 class MailActionExecutor(object):
-    """The executor for this action.
-    """
+    """The executor for this action."""
 
     def __init__(self, context, element, event):
         self.context = context
@@ -114,16 +112,14 @@ class MailActionExecutor(object):
         self.mapping = self.get_mapping()
 
     def get_portal(self):
-        """Get's the portal object
-        """
-        urltool = getToolByName(aq_inner(self.context), "portal_url")
+        """Get's the portal object"""
+        urltool = api.portal.get_tool("portal_url")
         return urltool.getPortalObject()
 
     def get_mapping(self):
-        """Return a mapping that will replace markers in the template
-        """
-        obj_title = safe_unicode(self.event.object.Title())
-        event_url = self.event.object.absolute_url()
+        """Return a mapping that will replace markers in the template"""
+        obj_title = safe_unicode(self.event.object.Title())  # NOQA
+        event_url = self.event.object.absolute_url()  # NOQA
         section_title = safe_unicode(self.context.Title())
         section_url = self.context.absolute_url()
         return {
@@ -134,8 +130,7 @@ class MailActionExecutor(object):
         }
 
     def expand_markers(self, text):
-        """Replace markers in text with the values in the mapping
-        """
+        """Replace markers in text with the values in the mapping"""
         for key, value in six.iteritems(self.mapping):
             if not isinstance(value, six.text_type):
                 value = value.decode("utf-8")
@@ -143,8 +138,7 @@ class MailActionExecutor(object):
         return text
 
     def get_from(self):
-        """Get the from address
-        """
+        """Get the from address"""
         source = self.element.source
         if source:
             return source
@@ -192,6 +186,7 @@ class MailActionExecutor(object):
         # Try to load data from the target object
         fieldName = str(self.element.fieldName)
         obj = self.get_target_obj()
+        recipients = None
 
         # 1: object attribute
         try:
@@ -237,7 +232,7 @@ class MailActionExecutor(object):
         """
         The recipients of this mail
         """
-        mailhost = getToolByName(aq_inner(self.context), "MailHost")
+        mailhost = api.portal.get_tool("MailHost")
         if not mailhost:
             error = "You must have a Mailhost utility to execute this action"
             raise ComponentLookupError(error)
@@ -261,12 +256,14 @@ class MailActionExecutor(object):
         # both adapt fully. Unless you can somehow adapt it to
         # 'firing a rule' event, which isn't available to my knowledge.
 
-        # Section title/urk
-        subject = self.expand_markers(self.element.subject)
-        message = self.expand_markers(self.element.message)
+        subject = self.element.subject
+        message = self.element.message
+        # Section title/url
+        subject = self.expand_markers(subject)
+        message = self.expand_markers(message)
         # All other stringinterp
-        subject = interpolator(self.element.subject).strip()
-        message = interpolator(self.element.message).strip()
+        subject = interpolator(subject).strip()
+        message = interpolator(message).strip()
 
         email_charset = None
         registry = getUtility(IRegistry)
@@ -287,7 +284,6 @@ class MailActionExecutor(object):
 
 
 class MailFromFieldAddForm(MailAddForm):
-
     schema = IMailFromFieldAction
     Type = MailFromFieldAction
 
@@ -297,7 +293,6 @@ class MailFromFieldAddFormView(ContentRuleFormWrapper):
 
 
 class MailFromFieldEditForm(MailEditForm):
-
     schema = IMailFromFieldAction
 
 

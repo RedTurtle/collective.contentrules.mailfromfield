@@ -3,7 +3,7 @@ import os
 
 version = "1.0.2.dev0"
 
-tests_require = ["Products.PloneTestCase"]
+tests_require = ["plone.app.robotframework"]
 
 setup(
     name="collective.contentrules.mailfromfield",
@@ -18,8 +18,15 @@ setup(
         "Framework :: Plone",
         "Framework :: Plone :: Addon",
         "Framework :: Plone :: 5.2",
+        "Framework :: Plone :: 6.0",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Development Status :: 5 - Production/Stable",
         "Topic :: Communications :: Email",
         "License :: OSI Approved :: GNU General Public License (GPL)",
     ],
@@ -34,6 +41,7 @@ setup(
     license="GPL",
     packages=find_packages(exclude=["ez_setup"]),
     namespace_packages=["collective", "collective.contentrules"],
+    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*",
     include_package_data=True,
     zip_safe=False,
     tests_require=tests_require,

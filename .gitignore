@@ -1,5 +1,7 @@
 extra
 .coverage
+coverage.json
+pyvenv.cfg
 .python-version
 *.egg-info
 *.log

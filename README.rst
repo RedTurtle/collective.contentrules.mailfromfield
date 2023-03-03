@@ -1,3 +1,28 @@
+
+.. image:: https://img.shields.io/pypi/v/collective.contentrules.mailfromfield.svg
+    :target: https://pypi.org/project/collective.contentrules.mailfromfield/
+    :alt: Latest Version
+
+.. image:: https://img.shields.io/pypi/pyversions/collective.contentrules.mailfromfield.svg?style=plastic
+    :target: https://pypi.org/project/collective.contentrules.mailfromfield/
+    :alt: Supported - Python Versions
+
+.. image:: https://img.shields.io/pypi/dm/collective.contentrules.mailfromfield.svg
+    :target: https://pypi.org/project/collective.contentrules.mailfromfield/
+    :alt: Number of PyPI downloads
+
+.. image:: https://img.shields.io/pypi/l/collective.contentrules.mailfromfield.svg
+    :target: https://pypi.org/project/collective.contentrules.mailfromfield/
+    :alt: License
+
+.. image:: https://github.com/RedTurtle/collective.contentrules.mailfromfield/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/RedTurtle/collective.contentrules.mailfromfield/actions
+    :alt: Tests
+    
+.. image:: https://coveralls.io/repos/github/RedTurtle/collective.contentrules.mailfromfield/badge.svg?branch=main
+    :target: https://coveralls.io/github/RedTurtle/collective.contentrules.mailfromfield?branch=main
+    :alt: Coverage
+
 .. contents::
 
 Introduction
