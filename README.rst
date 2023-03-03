@@ -19,8 +19,8 @@
     :target: https://github.com/RedTurtle/collective.contentrules.mailfromfield/actions
     :alt: Tests
     
-.. image:: https://coveralls.io/repos/github/RedTurtle/collective.contentrules.mailfromfield/badge.svg?branch=main
-    :target: https://coveralls.io/github/RedTurtle/collective.contentrules.mailfromfield?branch=main
+.. image:: https://coveralls.io/repos/github/RedTurtle/collective.contentrules.mailfromfield/badge.svg?branch=master
+    :target: https://coveralls.io/github/RedTurtle/collective.contentrules.mailfromfield?branch=master
     :alt: Coverage
 
 .. contents::
