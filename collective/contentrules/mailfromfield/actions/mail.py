@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
-from Acquisition import aq_inner, aq_base
-from collective.contentrules.mailfromfield import messageFactory as _, logger
+from Acquisition import aq_base, aq_inner
+from collective.contentrules.mailfromfield import logger
+from collective.contentrules.mailfromfield import messageFactory as _
 from OFS.SimpleItem import SimpleItem
-from plone.app.contentrules.actions.mail import MailAddForm
-from plone.app.contentrules.actions.mail import MailEditForm
+from plone import api
+from plone.app.contentrules.actions.mail import MailAddForm, MailEditForm
 from plone.app.contentrules.browser.formhelper import ContentRuleFormWrapper
-from plone.contentrules.rule.interfaces import IRuleElementData, IExecutable
+from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
 from plone.registry.interfaces import IRegistry
 from plone.stringinterp.interfaces import IStringInterpolator
-from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from six.moves import filter
 from zope import schema
-from zope.component import adapter
-from zope.component import getUtility
+from zope.component import adapter, getUtility
 from zope.component.interfaces import ComponentLookupError
-from zope.interface import implementer
-from zope.interface import Interface
+from zope.interface import implementer, Interface
 
 import six
 
@@ -113,7 +111,7 @@ class MailActionExecutor(object):
 
     def get_portal(self):
         """Get's the portal object"""
-        urltool = getToolByName(aq_inner(self.context), "portal_url")
+        urltool = api.portal.get_tool("portal_url")
         return urltool.getPortalObject()
 
     def get_mapping(self):
@@ -186,6 +184,7 @@ class MailActionExecutor(object):
         # Try to load data from the target object
         fieldName = str(self.element.fieldName)
         obj = self.get_target_obj()
+        recipients = None
 
         # 1: object attribute
         try:
@@ -231,7 +230,7 @@ class MailActionExecutor(object):
         """
         The recipients of this mail
         """
-        mailhost = getToolByName(aq_inner(self.context), "MailHost")
+        mailhost = api.portal.get_tool("MailHost")
         if not mailhost:
             error = "You must have a Mailhost utility to execute this action"
             raise ComponentLookupError(error)
@@ -255,12 +254,14 @@ class MailActionExecutor(object):
         # both adapt fully. Unless you can somehow adapt it to
         # 'firing a rule' event, which isn't available to my knowledge.
 
-        # Section title/urk
-        subject = self.expand_markers(self.element.subject)
-        message = self.expand_markers(self.element.message)
+        subject = self.element.subject
+        message = self.element.message
+        # Section title/url
+        subject = self.expand_markers(subject)
+        message = self.expand_markers(message)
         # All other stringinterp
-        subject = interpolator(self.element.subject).strip()
-        message = interpolator(self.element.message).strip()
+        subject = interpolator(subject).strip()
+        message = interpolator(message).strip()
 
         email_charset = None
         registry = getUtility(IRegistry)

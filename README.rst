@@ -1,5 +1,3 @@
-.. contents::
-
 
 .. image:: https://img.shields.io/pypi/v/collective.contentrules.mailfromfield.svg
     :target: https://pypi.org/project/collective.contentrules.mailfromfield/
@@ -25,6 +23,7 @@
     :target: https://coveralls.io/github/RedTurtle/collective.contentrules.mailfromfield?branch=main
     :alt: Coverage
 
+.. contents::
 
 Introduction
 ============

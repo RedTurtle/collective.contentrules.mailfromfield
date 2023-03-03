@@ -6,9 +6,9 @@ except ImportError:
     # Plone 4.1
     from zope.schema.interfaces import IVocabularyFactory
 
-from zope.interface import implementer
-from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from collective.contentrules.mailfromfield import messageFactory as _
+from zope.interface import implementer
+from zope.schema.vocabulary import SimpleTerm, SimpleVocabulary
 
 
 @implementer(IVocabularyFactory)
