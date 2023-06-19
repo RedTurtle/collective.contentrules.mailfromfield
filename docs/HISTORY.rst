@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.0 (Unreleased)
+1.2.0 (2023-06-19)
 ------------------
 
 - Change mail send method and allow to eventually add attachments.
