@@ -2,6 +2,7 @@
 from Acquisition import aq_base, aq_inner
 from collective.contentrules.mailfromfield import logger
 from collective.contentrules.mailfromfield import messageFactory as _
+from email.message import EmailMessage
 from OFS.SimpleItem import SimpleItem
 from plone import api
 from plone.app.contentrules.actions.mail import MailAddForm, MailEditForm
@@ -249,13 +250,6 @@ class MailActionExecutor(object):
         obj = self.event.object
 
         interpolator = IStringInterpolator(obj)
-
-        # No way to use self.context (where rule is fired) in interpolator
-        # self.context in interpolator is the obj given
-        # And having  two interpolators is strange, because they
-        # both adapt fully. Unless you can somehow adapt it to
-        # 'firing a rule' event, which isn't available to my knowledge.
-
         subject = self.element.subject
         message = self.element.message
         # Section title/url
@@ -271,16 +265,27 @@ class MailActionExecutor(object):
         if record:
             email_charset = record.value
 
+        msg = EmailMessage()
+        msg.set_content(message, charset=email_charset)
+        msg["Subject"] = subject
+        msg["From"] = source
+        msg["To"] = ""
+
+        self.manage_attachments(msg=msg)
         for email_recipient in recipients:
+            msg.replace_header("To", email_recipient)
+            # we set immediate=True because we need to catch exceptions.
+            # by default (False) exceptions are handled by MailHost and we can't catch them.
+            mailhost.send(msg, charset=email_charset, immediate=True)
+
             logger.debug("sending to: %s" % email_recipient)
-            mailhost.send(
-                message,
-                mto=email_recipient,
-                mfrom=source,
-                subject=subject,
-                charset=email_charset,
-            )
         return True
+
+    def manage_attachments(self, msg):
+        """
+        Customize this when needed
+        """
+        pass
 
 
 class MailFromFieldAddForm(MailAddForm):
