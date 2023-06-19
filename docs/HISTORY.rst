@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.1.0 (unreleased)
+1.1.0 (2023-06-19)
 ------------------
 
 - Plone 6 support
