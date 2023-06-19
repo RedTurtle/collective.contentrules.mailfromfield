@@ -1,13 +1,17 @@
 Changelog
 =========
 
+1.2.0 (Unreleased)
+------------------
+
+- Change mail send method and allow to eventually add attachments.
+  [cekk]
+
 1.1.0 (2023-06-19)
 ------------------
 
 - Plone 6 support
   [foxtrot-dfm1]
-- Change mail send method and allow to eventually add attachments.
-  [cekk]
 
 1.0.1 (2021-03-10)
 ------------------
