@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.1 (unreleased)
+1.2.1 (2023-06-20)
 ------------------
 
 - send email on successful transaction commit (#9)
