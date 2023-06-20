@@ -49,7 +49,7 @@ setup(
     install_requires=[
         "setuptools",
         "plone.contentrules",
-        # -*- Extra requirements: -*-
+        "markdown",
     ],
     entry_points="""
       [z3c.autoinclude.plugin]

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import markdown
 from Acquisition import aq_base, aq_inner
 from collective.contentrules.mailfromfield import logger
 from collective.contentrules.mailfromfield import messageFactory as _
@@ -76,6 +77,16 @@ class IMailFromFieldAction(Interface):
         required=True,
     )
 
+    is_markdown = schema.Bool(
+        title=_("Message Markdown formatted"),
+        description=_(
+            "help_is_markdown",
+            default="If checked, the message will be formatted using Markdown."
+            "https://www.markdownguide.org/basic-syntax/",
+        ),
+        required=False,
+    )
+
 
 @implementer(IMailFromFieldAction, IRuleElementData)
 class MailFromFieldAction(SimpleItem):
@@ -88,6 +99,7 @@ class MailFromFieldAction(SimpleItem):
     fieldName = ""
     target = ""
     message = ""
+    is_markdown = False
 
     element = "plone.actions.MailFromField"
 
@@ -270,6 +282,10 @@ class MailActionExecutor(object):
         msg["Subject"] = subject
         msg["From"] = source
         msg["To"] = ""
+
+        if self.element.is_markdown:
+            # https://docs.python.org/3.11/library/email.examples.html#id5
+            msg.add_alternative(markdown.markdown(message), subtype="html")
 
         self.manage_attachments(msg=msg)
         for email_recipient in recipients:
