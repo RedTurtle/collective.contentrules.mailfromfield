@@ -4,8 +4,8 @@ Changelog
 1.2.1 (unreleased)
 ------------------
 
- - send email on successful transaction commit (#9)
-   [mamico]
+- send email on successful transaction commit (#9)
+  [mamico]
 
 
 1.2.0 (2023-06-19)
