@@ -274,9 +274,7 @@ class MailActionExecutor(object):
         self.manage_attachments(msg=msg)
         for email_recipient in recipients:
             msg.replace_header("To", email_recipient)
-            # we set immediate=True because we need to catch exceptions.
-            # by default (False) exceptions are handled by MailHost and we can't catch them.
-            mailhost.send(msg, charset=email_charset, immediate=True)
+            mailhost.send(msg, charset=email_charset)
 
             logger.debug("sending to: %s" % email_recipient)
         return True
