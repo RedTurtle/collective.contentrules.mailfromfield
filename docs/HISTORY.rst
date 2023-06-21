@@ -4,7 +4,8 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Markdown formatted message (#10)
+  [mamico]
 
 
 1.2.1 (2023-06-20)

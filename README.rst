@@ -62,6 +62,10 @@ In the rule configuration panel you need to fill a set of information:
 
     You can place inside this text some markers (see below).
 
+``Message Markdown formatted``
+    (advanced) If checked, the message is formatted in Markdown (https://www.markdownguide.org/basic-syntax/)
+    and rendered as HTML.
+
 How it take the email data
 --------------------------
 

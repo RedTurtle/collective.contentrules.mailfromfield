@@ -229,7 +229,7 @@ class TestMailAction(ContentRulesTestCase):
         self.assertIn(b"To: member1@dummy.org", mailSent)
         self.assertIn(b"From: foo@bar.be", mailSent)
         self.assertIn(
-            b"C=C3=A0rtella' created in http://nohost/plone/f1 - Section=\n is 'C=C3=A0rtella' (http://nohost/plone/f1) !",
+            b"C=C3=A0rtella' created in http://nohost/plone/f1 - Section=\n is 'C=C3=A0rtella' (http://nohost/plone/f1) !",  # noqa
             mailSent,
         )
 
@@ -244,6 +244,29 @@ class TestMailAction(ContentRulesTestCase):
         e.message = "Còntènt '${title}' created in ${url} - Section is '${section_name}' (${section_url}) !"
         getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)), IExecutable)()
         self.assertEqual(self.mailhost.messages, [])
+
+    def testExecuteWithMarkdown(self):
+        self.loginAsPortalOwner()
+        self.folder.foo_attr = "member1@dummy.org"
+        e = MailFromFieldAction()
+        e.source = "foo@bar.be"
+        e.fieldName = "foo_attr"
+        e.target = "object"
+        e.subject = "Subject"
+        e.is_markdown = True
+        e.message = (
+            "# Còntènt '${title}'\n"
+            "created in [link](${url})\n\n"
+            "- Section is [${section_name}](${section_url}) !\n"
+        )
+        getMultiAdapter((self.folder, e, DummyEvent(self.folder.d1)), IExecutable)()
+        self.assertEqual(len(self.mailhost.messages), 1)
+        mailSent = self.mailhost.messages[0].decode("utf-8")
+        self.assertIn('Content-Type: text/plain; charset="utf-8"', mailSent)
+        self.assertIn('Content-Type: text/html; charset="utf-8"', mailSent)
+        self.assertIn(
+            '<p>created in <a href="http://nohost/plone/f1/d1">link</a></p>', mailSent
+        )
 
 
 def test_suite():

@@ -6,7 +6,7 @@ on:
   # Allow to run this workflow manually from the Actions tab
   workflow_dispatch:
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -44,16 +44,17 @@ jobs:
     - name: Test
       run: tox -e ${{ matrix.config[1] }}
     - name: Coveralls
-      uses: AndreMiras/coveralls-python-action@v20201129
+      uses: coverallsapp/github-action@v2
       with:
+        flag-name: run-${{ matrix.config[1] }}
         parallel: true
-        flag-name: ${{ matrix.config[1] }}
 
   coveralls_finish:
-    needs: build
+    needs: test
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
     - name: Coveralls Finished
-      uses: AndreMiras/coveralls-python-action@v20201129
+      uses: coverallsapp/github-action@v2
       with:
         parallel-finished: true
